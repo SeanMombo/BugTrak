@@ -1,0 +1,22 @@
+.projectPage {
+    
+}
+
+.projectPageTop {
+
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}    
+
+.detail {
+    flex:1;
+}
+
+
+.projectPageBottom {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}    
+
