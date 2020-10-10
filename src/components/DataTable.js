@@ -1,6 +1,8 @@
 import React from 'react';
+import { truncateString } from '../utils';
+
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,15 +16,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import TextField from '@material-ui/core/TextField'
+import { useSelector } from 'react-redux'
+import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+
+
 
 import { useHistory } from "react-router-dom";
+// import { PlayCircleFilledWhite } from '@material-ui/icons';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -52,20 +53,8 @@ function stableSort(array, comparator) {
 }
 
 
-function createRows(data) {
-  let rows = [];
-  data.forEach(obj => {
-    rows.push({...obj});
-  })
-
-  return rows;
-}
-
-
-
-
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
+  const { classes, order, orderBy, onRequestSort, headCells } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -93,7 +82,7 @@ function EnhancedTableHead(props) {
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}
             >
-              {headCell.label}
+              <b>{headCell.label}</b>
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -117,10 +106,16 @@ EnhancedTableHead.propTypes = {
   rowCount: PropTypes.number.isRequired,
 };
 
+//////////// TOOLBAR HEAD //////////////////////////////
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1),
+
+    backgroundColor: '#303030',
+    color:'white',
+    display:'flex',
+    flexDirection:'row',
   },
   highlight:
     theme.palette.type === 'light'
@@ -135,20 +130,26 @@ const useToolbarStyles = makeStyles((theme) => ({
   title: {
     flex: '1 1 100%',
   },
+  textField: {
+    backgroundColor:'white',
+    color:'black',
+  }
 }));
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { numSelected, tableTitle } = props;
+  const { tableTitle, altData } = props;
 
   return (
     <Toolbar
       className={classes.root}
     >
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+        
         {tableTitle}
+       
       </Typography>
-
+      
     </Toolbar>
   );
 };
@@ -157,16 +158,25 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
+
+///////////////////////////////////////////////
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    // width: '100%',
+    margin:8,
+    
+  },
+  headerBottom: {
+    marginBottom: '1px solid black'
   },
   paper: {
+    
     width: '100%',
     marginBottom: theme.spacing(2),
   },
   table: {
-    minWidth: 750,
+    height:'100%',
+    minWidth: 500,
   },
   visuallyHidden: {
     border: 0,
@@ -181,18 +191,29 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     minWidth: 122,
-  }
+  },
+  searchRoot: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: '25ch',
+  },
+
 }));
 
-export default function EnhancedTable({data, tableProps}) {
 
-  const rows = createRows(data);
+export default function EnhancedTable({data, altData, tableProps}) {
 
-  let headCells, linkRoute, tableTitle;
+  let headCells, linkRoute, tableTitle, buttonName;
 
   headCells = tableProps.headers;
   tableTitle = tableProps.tableTitle;
   linkRoute = tableProps.linkRoute;
+  buttonName = tableProps.buttonName;
+
 
 
   const classes = useStyles();
@@ -201,9 +222,70 @@ export default function EnhancedTable({data, tableProps}) {
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
+  const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  ///////////////////////////
+  function createRows(data) {
+    let rows = [];
+    data.forEach(obj => {
+      rows.push({...obj});
+    })
+  
+    return rows;
+  }
+
+  const [rows, setRows] = React.useState(createRows(data));
+  const [searchRows, setSearchRows] = React.useState(createRows(data));
+  const [search, setSearch] = React.useState('');
+
+  const handleChangeSearch = (event) => {
+    setSearch(event.target.value);
+    setSearchRows(searchData(rows, event.target.value))
+  };
+
+
+  /////////////////////////
+    
+  // const usersQuery = {
+  //   collection: 'users', 
+  // }
+
+  // useFirestoreConnect(() => [usersQuery]);
+
+  let users = useSelector(
+    ({ firestore: { data } }) => data.users
+  )
+  
+  //  if (isEmpty(users)) return 'Loading';
+
+
+  /////////////////////////
+
+
+
+
+
+
+
+
+  /////////////////////////////
+  const rejectedCols = ['createdAt', 'id', 'dateCreated', 'dateEdited', 'assignee', 'submitter', 'createdBy', 'projectId', 'userId'];
+
+  const searchData = (rows, str) => {
+    str = str.toLowerCase();
+    let columns = rows[0] && Object.keys(rows[0]);
+    
+  
+    columns = columns.filter(el => !rejectedCols.includes(el))
+    return rows.filter(row => 
+      columns.some(
+        col => { 
+          return row[col].toString().toLowerCase().indexOf(str) > -1 }))
+    
+  }
+
+  ///////////////////////////
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -217,26 +299,6 @@ export default function EnhancedTable({data, tableProps}) {
       return;
     }
     setSelected([]);
-  };
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -256,21 +318,14 @@ export default function EnhancedTable({data, tableProps}) {
     history.push(linkRoute + `${event.currentTarget.value}`);
   }
 
-  function truncateString(str, num) {
-    if (typeof str !== 'string') return str;
 
-    if (str.length <= num) {
-      return str
-    }
-    return str.slice(0, num) + '...'
-  }
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  // const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
-  const DisplayRow = ({row}) => {
-
+  const DisplayRow = ({row, buttonName}) => {
+     console.log(row, buttonName, headCells)
     return (
       <TableRow
         hover
@@ -279,29 +334,63 @@ export default function EnhancedTable({data, tableProps}) {
 
         {headCells.map(head => {
           
-           return (head.id !== 'action') ? <TableCell component="th">{truncateString(row[head.id], 50)}</TableCell> : null
+          let stringVal = row[head.id];
+          const dateStrings = ['dateEdited', 'dateCreated'];
+          const userIdStrings = ['submitter', 'creator', 'assignee', 'userId'];
+
+          //format dates into strings 
+          if (dateStrings.includes(head.id)) {
+
+            stringVal = new Date(stringVal.seconds * 1000 + stringVal.nanoseconds/1000000);
+            stringVal = stringVal.toISOString().split('T')[0];
+          } 
+          //Format user ID's into their names
+          else if (userIdStrings.includes(head.id)) { 
+            stringVal = users[row[head.id]].displayName;
+          }
+
+           return (head.id !== 'action') ? 
+            <TableCell align="left" >{stringVal}</TableCell> 
+            : 
+            <TableCell align="right">
+              <Button  
+                variant="contained" color="primary" size="small" 
+                className={classes.button}
+                value={row.id}
+                onClick={handleManageProjectClick}
+                >
+                {buttonName}
+              </Button>
+            </TableCell>
         })}
         
-        <TableCell align="right">
-          <Button  
-            variant="contained" color="primary" size="small" 
-            className={classes.button}
-            value={row.id}
-            onClick={handleManageProjectClick}
-            >
-            View Project
-          </Button>
-        </TableCell>
+        
       
       </TableRow>
     )
   }
 
 
+
+
   return (
     <div className={classes.root}>
+       
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} />
+        
+        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} />
+        <TextField
+          // label="Dense"
+          id="filled-margin-dense"
+          // defaultValue="Default Value"
+          className={classes.textField}
+          // helperText="Some important text"
+          placeholder="Seach any field value"
+          margin="dense"
+          value={search}
+          onChange={handleChangeSearch}
+        />
+
         <TableContainer>
           <Table
             className={classes.table}
@@ -310,6 +399,7 @@ export default function EnhancedTable({data, tableProps}) {
             aria-label="enhanced table"
           >
             <EnhancedTableHead
+              className={classes.headerBottom}
               classes={classes}
               numSelected={selected.length}
               order={order}
@@ -319,13 +409,14 @@ export default function EnhancedTable({data, tableProps}) {
               rowCount={rows.length}
               headCells={headCells}
             />
+   
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(searchRows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
 
                   return (
-                    <DisplayRow row={row}/>
+                    <DisplayRow row={row} buttonName={buttonName}/>
                   );
                 })}
               {emptyRows > 0 && (
@@ -346,10 +437,10 @@ export default function EnhancedTable({data, tableProps}) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
+      {/* <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
-      />
+      /> */}
     </div>
   );
 }

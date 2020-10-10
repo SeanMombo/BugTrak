@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+//Storing the shape of data for DataTable, as well as some other relevant variables. 
+//This allows me to use the same DataTable component, and allow it to support multiple data displays
+
 export const tableSlice = createSlice({
     name: 'tables',
     initialState: {
@@ -10,6 +13,7 @@ export const tableSlice = createSlice({
                 { id: 'action', numeric: true, label: '' },  
               ],
               tableTitle: 'Projects',
+              buttonName: 'View Project',
               linkRoute: '/project/'
         },
         users_projects: {
@@ -17,35 +21,63 @@ export const tableSlice = createSlice({
                 { id: 'displayName', numeric: false, label: 'Name' },
                 { id: 'email', numeric: false, label: 'Email' },
                 { id: 'userType', numeric: false, label: 'Role' },
-                { id: 'action', numeric: true, label: '' },  
 
               ],
               tableTitle: 'Project Team',
+              buttonName: '',
               linkRoute: ''
         },
-        tickets: {
+        tickets_projects: {
             headers: [
                 { id: 'title', numeric: false, label: 'Title' },
-                { id: 'body', numeric: false, label: 'Description' },
-                { id: 'assignedTo', numeric: false, label: 'Developer' },
+                { id: 'assignee', numeric: false, label: 'Developer' },
                 { id: 'status', numeric: false, label: 'Status' },
                 { id: 'priority', numeric: false, label: 'Priority' },
+                // { id: 'dateCreated', numeric: false, label: 'Date Created' },
                 { id: 'action', numeric: true, label: '' },  
 
               ],
               tableTitle: 'Tickets',
+              buttonName: 'View Ticket',
               linkRoute: '/ticket/'
         },
-
-        comments_ticket: {
+        tickets: {
             headers: [
-                { id: 'displayName', numeric: false, label: 'Commentor' },
-                { id: 'body', numeric: false, label: 'Message' },
-                { id: 'dateCreated', numeric: false, label: 'Created' },
+                { id: 'title', numeric: false, label: 'Title' },
+                { id: 'assignee', numeric: false, label: 'Developer' },
+                { id: 'status', numeric: false, label: 'Status' },
+                { id: 'priority', numeric: false, label: 'Priority' },
+                { id: 'dateCreated', numeric: false, label: 'Date Created' },
                 { id: 'action', numeric: true, label: '' },  
 
               ],
+              tableTitle: 'Tickets',
+              buttonName: '',
+              linkRoute: '/ticket/'
+        },
+        comments_ticket: {
+            headers: [
+                { id: 'userId', numeric: false, label: 'Commentor' },
+                { id: 'body', numeric: false, label: 'Message' },
+                { id: 'dateCreated', numeric: false, label: 'Created' },
+                // { id: 'action', numeric: true, label: '' },  
+
+              ],
               tableTitle: 'Comments',
+              buttonName: '',
+              linkRoute: ''
+        },
+        history_ticket: {
+            headers: [
+                { id: 'property', numeric: false, label: 'Property' },  
+                { id: 'val', numeric: false, label: 'Current Value' },
+                { id: 'prevVal', numeric: false, label: 'Previous Value' },
+                { id: 'dateEdited', numeric: false, label: 'Date Changed' },
+                // { id: 'action', numeric: true, label: '' },  
+
+              ],
+              tableTitle: 'Ticket History',
+              buttonName: '',
               linkRoute: ''
         },
     },
@@ -59,7 +91,10 @@ export const tableSlice = createSlice({
 //selectors
 export const selectTableProject = state => state.tables.projects;
 export const selectTableUsersProjects = state => state.tables.users_projects;
+export const selectTableTicketsProjects = state => state.tables.tickets_projects;
 export const selectTableTickets = state => state.tables.tickets;
+export const selectTableHistoryTicket = state => state.tables.history_ticket;
+export const selectTableCommentsTicket = state => state.tables.comments_ticket;
 export const initialState = tableSlice.initialState;
 
 //reducer

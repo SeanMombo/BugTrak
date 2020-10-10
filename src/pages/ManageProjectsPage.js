@@ -1,28 +1,23 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-import ProjectPage from './ProjectPage'
+
 import DataTable from '../components/DataTable'
 import { selectTableProject } from '../redux/tableSlice';
 
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
-    useRouteMatch,
-    useParams
-  } from "react-router-dom";
+// import {
+//     useRouteMatch,
+//   } from "react-router-dom";
 
-const userQuery = {
+const projectQuery = {
     collection: 'projects', 
 }
 
 function ManageProjects() {
-    let match = useRouteMatch();
+    // let match = useRouteMatch();
 
     // Attach  listener
-    useFirestoreConnect(() => [userQuery])
+    useFirestoreConnect(() => [projectQuery])
 
     // Get from redux state
     const projects = useSelector(({ firestore: { ordered } }) => ordered.projects)

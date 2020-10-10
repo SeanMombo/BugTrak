@@ -1,0 +1,14 @@
+.commentCard {
+    display:flex;
+    flex-direction: column;
+    padding:8px;
+    margin-bottom:32px;
+}
+
+.topRow {
+    display:flex;
+}
+
+.commentRow {
+
+}

@@ -1,43 +1,39 @@
 import React from 'react'
-import { render } from 'react-dom'
 import { Provider, useSelector } from 'react-redux'
 import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore' // <- needed if using firestore
-import { createStore, combineReducers, compose } from 'redux'
 import {
   ReactReduxFirebaseProvider,
-  firebaseReducer,
   isLoaded, isEmpty,
-
+  useFirestoreConnect,
 } from 'react-redux-firebase'
-import { createFirestoreInstance, firestoreReducer } from 'redux-firestore' // <- needed if using firestore
+
+import { createFirestoreInstance } from 'redux-firestore' // <- needed if using firestore
 import reducer, { initialState } from './redux/reducers';
 import { configureStore } from '@reduxjs/toolkit'
-
-
 
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams,
   Redirect,
 } from "react-router-dom";
+import './App.css'
 
+import ControlPanel from './components/ControlPanel/control-panel.component'
+import Header from './components/Header/header.component'
+// import SimpleModal from './components/Modal/Modal'
 
-
-
-import Todos from './components/Todos'
-import NewTodo from './components/NewTodo'
-import ManageUsers from './pages/ManageUsersPage'
+// import Todos from './components/Todos'
+// import NewTodo from './components/NewTodo'
+// import ManageUsers from './pages/ManageUsersPage'
 import ManageProjects from './pages/ManageProjectsPage'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
 import LoginPage from './pages/LoginPage'
 
+import Test from './components/test'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7J1Jfu8DnMaKYK7XZmwymosz5w5xpluM",
@@ -98,26 +94,25 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 
-
-
 // Setup react-redux so that connect HOC can be used
 function App() {
+
+  const usersQuery = {
+    collection: 'users', 
+  }
+
+  useFirestoreConnect(() => [usersQuery]);
+  
+
   return (
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
+      
+      <Test/>
         <Router>
-          <div>
-            <ul>
-              <li>
-                <Link to="/">Home</Link>
-              </li>
-              <li>
-                <Link to="/manageprojects">Project</Link>
-              </li>
-
-              <li> <Link to="/ticket">Ticket</Link></li>
-             
-            </ul>
+          <Header/>
+          <ControlPanel/>
+          <div className='App'>
 
             <Switch>
 
@@ -142,13 +137,13 @@ function App() {
             </Switch>
           </div>
         </Router>
+        
       </ReactReduxFirebaseProvider>
     </Provider>
   )
 }
 
 export default App;
-
 
 
 
