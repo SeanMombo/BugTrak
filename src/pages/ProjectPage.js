@@ -1,36 +1,21 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { connect } from 'react-redux'
-import { compose } from 'redux'
-import { firestoreConnect, useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-firebase'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-firebase'
 import { useParams } from 'react-router-dom'
 import { selectTableUsersProjects, selectTableTicketsProjects} from '../redux/tableSlice';
-
+import { actionTypes } from 'redux-firestore'
 import DataTable from '../components/DataTable'
-// import TransferList from '../components/transferlist.component';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider'
 
-// import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-// import { makeStyles } from '@material-ui/core/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import AddUsersToProject from '../components/AddUsersToProject';
 
-
-// import ContainerWrapper from '../components/ContainerWrapper'
 import './ProjectPage.css'
-
-
-// const useStyles = makeStyles({
-//     root: {
-//       minWidth: 275,
-//     },
-
-//     title: {
-//       fontSize: 14,
-//     },
-
-//   });
-
 
 
 const usersProjectsPopulates = [
@@ -39,11 +24,13 @@ const usersProjectsPopulates = [
 
 const ticketPopulates = [
     { child: 'assignee', root: 'users' },
-    { child: 'submitter', root: 'users' },
+    { child: 'submitter', root: 'users' }
 ];
 
 function ProjectPage() {
+
     const { projectId } = useParams() // matches todos/:todoId in route
+    const dispatch = useDispatch();
     
     const projectsQuery = {
         collection: 'projects',     
@@ -52,76 +39,84 @@ function ProjectPage() {
     const usersProjectsQuery = {
         collection: 'users_projects', 
         doc: projectId,
-        usersProjectsPopulates,
+        populates: usersProjectsPopulates,
     }
-
-    // const usersQuery = {
-    //     collection: 'users', 
-    // }
-
     const ticketsQuery = {
         collection: 'tickets', 
         where: [['projectId', '==', projectId]],
-        storeAs:`tickets_${projectId}`,
-        ticketPopulates,
+        populates: ticketPopulates,
     }
-    console.log(projectId)
-    // Attach users listener
-    useFirestoreConnect(() => [projectsQuery, usersProjectsQuery, ticketsQuery])
 
-    const users_projects = useSelector(({ firestore }) => populate(firestore, "users_projects", usersProjectsPopulates));
+
+    // Attach users listener
+    useFirestoreConnect(() => [ticketsQuery, usersProjectsQuery, projectsQuery])
+
+    useEffect(() => {
+        return () => dispatch({ type: actionTypes.CLEAR_DATA }) // eslint-disable-next-line
+    },[]) 
+    
+    const users_projects = useSelector(({ firestore }) => populate(firestore, 'users_projects', usersProjectsPopulates));
 
     const project = useSelector(
         ({ firestore: { data } }) => data.projects && data.projects[projectId]
-    )
+    ) 
+   
 
-    // const tickets = useSelector(
-    //     ({ firestore: { ordered } }) => ordered[`tickets_${projectId}`]
-    // )
-
-    const users_projects = useSelector(({ firestore }) => populate(firestore, "users_projects", usersProjectsPopulates));
+    let tickets = useSelector(({ firestore }) => populate(firestore, 'tickets', ticketPopulates));
 
     let tableUsersProjects = useSelector(selectTableUsersProjects);
 
     let tableTickets = useSelector(selectTableTicketsProjects);
 
 
+
     // Show a message while users are loading
-    if (!isLoaded(project) || !isLoaded(users_projects) || !isLoaded(tickets)) {
-        return 'Loading'
+    if (!isLoaded(project, users_projects, tickets)) {
+        return <CircularProgress/>
     }
-
-
+    
     let usersInProject = users_projects[projectId]['collaborators'];
 
-    usersInProject = Object.values(usersInProject);
-    console.log(usersInProject)
-    
+    if (usersInProject)
+        usersInProject = Object.values(usersInProject);
+    else 
+        usersInProject = [];
+   
+
+    //add an id field to tickets. This happens automatically for usersInProject, but not for tickets bc we do a where: [] in the query.
+    let ticketsInProject = tickets;
+
+    if (ticketsInProject)
+        ticketsInProject = Object.keys(ticketsInProject).map(key => {
+            const newObj = Object.assign({id: key}, ticketsInProject[key]);
+
+            return newObj;
+        });
+    else 
+        ticketsInProject = [];
+
     return (
         <div className='projectPage'>
-
-
             <div className='projectPageTop'>
-                <Card className='card'>
-                    <CardHeader className='cardHeader' title='Project Details'>
-                        {/* <Typography  variant="h6" id="tableTitle" component="div">
-                            Project Details
-                        </Typography> */}
-                    </CardHeader>
+                <Card className='card' elevation={3}>
+                    {/* <CardHeader className='cardHeader' title='Project Details' variant="dense">
+            
+                    </CardHeader> */}
                     <CardContent>
-                        <div className='detail'>
-                            <h5>Project Title:</h5>
-                            <h2>{project.title}</h2>
-                        </div>
-                        <div className='detail'>
-                            <h5>Project Description:</h5>
-                            <h2>{project.body}</h2>
-                        </div>
+                        
+                            {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
+                            <Typography className='greyText2' variant='h4' component='h4' gutterBottom >{project.title}</Typography>
+                        
+
+                        <Divider/><br/>
+                        {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography> */}
+                        <Typography  variant='p' component='p' gutterBottom >{project.body}</Typography>
                     </CardContent>
 
                 </Card>
 
                 <div className='userTable'>
+                    <AddUsersToProject />
                 {
                     !isEmpty(users_projects) ? 
                         <DataTable data={usersInProject}  tableProps={tableUsersProjects}/> 
@@ -130,66 +125,19 @@ function ProjectPage() {
                 </div>  
             </div>
 
-            
             <div className='projectPageBottom'>
-
                 <div className='ticketTable'>
                 {
                     isLoaded(tickets) ? 
-                        <DataTable data={tickets} tableProps={tableTickets}/> 
+                        <DataTable data={ticketsInProject} tableProps={tableTickets}/> 
                         : null  
                 }   
                 </div>  
 
-                {/* <div className='ticketTable'>
-                {
-                    isLoaded(tickets) ? 
-                       tickets.map(ticket => {
-                        return (
-                            <Card>
-                                <CardContent>
-                                    <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                        Title
-                                    </Typography>
-                                    <Typography variant="h5" component="h2">
-                                        {ticket.title}
-                                    </Typography>
-
-                                    <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                        Description
-                                    </Typography>
-                                    <Typography variant="h5" component="h2">
-                                        {ticket.body}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                       )}) : null
-                }   
-                </div>   */}
-
-            </div>
-           
-
-            
-           
-           
+            </div>      
         </div>
     )
-    
-
-    // const firestore = useFirestore()
-    
-    // function toggleDone() {
-    //     firestore.update(`projects/${projectId}`, { title: 'Hi :]' })
-    // }
-    
-    // function deleteTodo() {
-    //     return firestore.delete(`projects/${projectId}`)
-    // }
-
 }
-
-
 
 export default ProjectPage
 

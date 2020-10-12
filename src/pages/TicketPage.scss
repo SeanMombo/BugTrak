@@ -1,0 +1,257 @@
+$grey-light: hsl(192, 4%, 77%);
+$grey: hsl(200, 10%, 85%);
+$grey-dark: hsl(200, 10%, 70%);
+$shadow: hsla(200, 20%, 20%, 0.25);
+$red: #dc143c;
+
+$bg: hsl(200, 0%, 100%);
+$divider: $grey-light;
+$border: $grey-dark;
+
+$cutout-size: 1rem;
+
+.ticketPage {
+    min-width:900px;
+    /* height:50%; */
+    white-space: normal;
+   
+    display:flex;
+    flex-direction:column;
+
+    *,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+    .topRow {
+        display:flex;
+        flex-direction:row;
+    }
+    .ticketCardTop {
+        
+        display:flex;
+        flex-direction: column;
+        align-content: flex-start;
+        word-wrap:normal;
+        white-space: normal;
+    }    
+
+    .ticketCardMulti {
+        display:flex;
+        flex-direction: row;
+        align-content: flex-start;
+        word-wrap:normal;
+        white-space: normal;
+    }    
+
+
+    .detail {
+        flex:1;
+    }
+    .userTable {
+        /* width:400px;
+        max-width:400px; */
+        flex:1;
+    }
+    .ticketTable {
+        flex:2;
+    }
+
+    .ticketPageBottom {
+        /* display:inline-block;
+        display:flex;
+        flex-direction: row;
+        justify-content: space-evenly; */
+    }    
+
+    .dataTable {
+        flex:1;
+    }
+
+    .ticketCard {
+        /* width:400px; */
+        min-width:700px;
+        width:800px;
+        margin:8px;
+        border-top-right-radius: 0px !important;
+        border-top-left-radius: 0px !important;
+        // height:70%;
+    }
+    .cardHeader {
+        background-color: #303030;
+        color: white;
+        border-radius:0px !important;
+    }
+
+
+    .greyText {
+        /* color: #646464; */
+        position: relative;
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        box-sizing: border-box;
+        padding-right: 24px;
+        padding-top:4px;
+        min-width: 120px;
+        width: 25%;
+        
+        max-width: 180px;
+        line-height: 1;
+        font-weight: bold !important;
+    }
+
+    .greyText2 {
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        width: 65%;
+        box-sizing: border-box;
+        
+        /* padding-left:16px; */
+    }
+
+    .attributeContainer {
+        display: flex;
+        /* flex-wrap: wrap; */
+        margin-bottom: 16px;
+        word-break: break-word;
+    }
+
+
+    .indent {
+        padding-left:16px;
+    }
+
+
+    .cardLeft {
+        flex:7;
+        padding:8px;
+        // border-right: 2px lightgrey dotted;
+        overflow-y: auto;
+    }
+
+    .cardRight {
+        min-width:350px;
+        flex:6;
+        // padding:8px;
+        margin:8px;
+        
+    }   
+
+    .cardContent {
+        display:flex;
+        flex-direction:row;
+        justify-content: space-between;
+        white-space: normal;
+        padding:8px;
+        // border-bottom: 2px lightgrey dotted;
+    }
+
+    .cardWrapper {
+        
+
+    }
+
+    .commentList {
+        height:100%;
+        /* overflow-y: scroll; */
+
+    }
+
+
+    .ticket {
+        display: grid;
+        grid-template-rows: auto 1fr auto;
+        max-width: 24rem;
+        &__header,
+        &__body,
+        &__footer {
+        padding: 1.25rem;
+        background-color: $bg;
+        border: 1px solid $border;
+        box-shadow: 0 2px 4px $shadow;
+        }
+        &__header {
+        font-size: 1.5rem;
+        border-top: 0.25rem solid $red;
+        border-bottom: none;
+        box-shadow: none;
+        }
+        &__wrapper {
+        box-shadow: 0 2px 4px $shadow;
+        border-radius: 0.375em 0.375em 0 0;
+        overflow: hidden;
+        }
+        &__divider {
+        position: relative;
+        height: $cutout-size;
+        background-color: $bg;
+        margin-left: ($cutout-size / 2);
+        margin-right: ($cutout-size / 2);
+        &::after {
+            content: '';
+            position: absolute;
+            height: 50%;
+            width: 100%;
+            top: 0;
+            border-bottom: 2px dashed $divider;
+        }
+        }
+        &__notch {
+        position: absolute;
+        left: ($cutout-size / 2) * -1;
+        width: $cutout-size;
+        height: $cutout-size;
+        overflow: hidden;
+        &::after {
+            content: '';
+            position: relative;
+            display: block;
+            width: ($cutout-size * 2);
+            height: ($cutout-size * 2);
+            right: 100%;
+            top: -50%;
+            border: ($cutout-size / 2) solid $bg;
+            border-radius: 50%;
+            box-shadow: inset 0 2px 4px $shadow;
+        }
+        &--right {
+            left: auto;
+            right: ($cutout-size / 2) * -1;
+            &::after {
+            right: 0;
+            }
+        }
+        }
+        &__body {
+            border-bottom: none;
+            border-top: none;
+        & > * + * {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid $divider;
+        }
+        }
+        &__section {
+        & > * + * {
+            margin-top: 0.25rem;
+        }
+        & > h3 {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+        }
+        &__header,
+        &__footer {
+        font-weight: bold;
+        font-size: 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        }
+        &__footer {
+        border-top: 2px dashed $divider;
+        border-radius: 0 0 0.325rem 0.325rem;
+        }
+    }
+
+}

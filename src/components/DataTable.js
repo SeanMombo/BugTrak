@@ -1,8 +1,7 @@
 import React from 'react';
-import { truncateString } from '../utils';
 
 import PropTypes from 'prop-types';
-// import clsx from 'clsx';
+
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,8 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
-import { useSelector } from 'react-redux'
-import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import { truncateString } from '../utils'
 
 
 
@@ -62,14 +60,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell> */}
+
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -77,18 +68,21 @@ function EnhancedTableHead(props) {
             padding='default'
             sortDirection={orderBy === headCell.id ? order : false}
           >
+            
+           {headCell.id !== 'action' ?
             <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              <b>{headCell.label}</b>
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : 'asc'}
+                onClick={createSortHandler(headCell.id)}
+              >
+                <b>{headCell.label}</b>
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  </span>
+                ) : null}
+              </TableSortLabel> : null
+            }
           </TableCell>
         ))}
       </TableRow>
@@ -138,11 +132,12 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { tableTitle, altData } = props;
+  const { tableTitle } = props;
 
   return (
     <Toolbar
       className={classes.root}
+      variant="dense"
     >
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         
@@ -170,9 +165,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '1px solid black'
   },
   paper: {
-    
     width: '100%',
-    marginBottom: theme.spacing(2),
+    // marginBottom: theme.spacing(2),
   },
   table: {
     height:'100%',
@@ -205,7 +199,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EnhancedTable({data, altData, tableProps}) {
+export default function EnhancedTable({data, altData, tableProps, isLoading}) {
 
   let headCells, linkRoute, tableTitle, buttonName;
 
@@ -213,8 +207,6 @@ export default function EnhancedTable({data, altData, tableProps}) {
   tableTitle = tableProps.tableTitle;
   linkRoute = tableProps.linkRoute;
   buttonName = tableProps.buttonName;
-
-
 
   const classes = useStyles();
   let history = useHistory();
@@ -228,8 +220,26 @@ export default function EnhancedTable({data, altData, tableProps}) {
   ///////////////////////////
   function createRows(data) {
     let rows = [];
+    const dateStrings = ['dateEdited', 'dateCreated'];
+    const userIdStrings = ['submitter', 'creator', 'assignee', 'userId'];
     data.forEach(obj => {
-      rows.push({...obj});
+      let o = {...obj};
+
+      Object.keys(o).forEach(key => {
+
+        if (dateStrings.includes(key)) {
+          let t;
+          t = new Date(o[key].seconds * 1000 + o[key].nanoseconds/1000000);
+          t = t.toISOString().split('T')[0];
+          o[key] = t;
+        } else if (userIdStrings.includes(key) && o[key]) { 
+          o[key] = o[key].displayName;
+        }
+
+        return o[key]
+      })
+
+      rows.push({...o});
     })
   
     return rows;
@@ -246,19 +256,6 @@ export default function EnhancedTable({data, altData, tableProps}) {
 
 
   /////////////////////////
-    
-  // const usersQuery = {
-  //   collection: 'users', 
-  // }
-
-  // useFirestoreConnect(() => [usersQuery]);
-
-  let users = useSelector(
-    ({ firestore: { data } }) => data.users
-  )
-  
-  //  if (isEmpty(users)) return 'Loading';
-
 
   /////////////////////////
 
@@ -270,13 +267,16 @@ export default function EnhancedTable({data, altData, tableProps}) {
 
 
   /////////////////////////////
-  const rejectedCols = ['createdAt', 'id', 'dateCreated', 'dateEdited', 'assignee', 'submitter', 'createdBy', 'projectId', 'userId'];
 
   const searchData = (rows, str) => {
+    const rejectedCols = [ 'projectId', 'userId', 'action'];
+
     str = str.toLowerCase();
     let columns = rows[0] && Object.keys(rows[0]);
-    
-  
+    console.log(columns)
+    columns = Object.values(headCells).map(val => val.id)
+    console.log(columns)
+
     columns = columns.filter(el => !rejectedCols.includes(el))
     return rows.filter(row => 
       columns.some(
@@ -315,6 +315,7 @@ export default function EnhancedTable({data, altData, tableProps}) {
   };
 
   const handleManageProjectClick = (event) => {
+    console.log(event.currentTarget.value)
     history.push(linkRoute + `${event.currentTarget.value}`);
   }
 
@@ -325,7 +326,7 @@ export default function EnhancedTable({data, altData, tableProps}) {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const DisplayRow = ({row, buttonName}) => {
-     console.log(row, buttonName, headCells)
+    console.log(row)
     return (
       <TableRow
         hover
@@ -334,21 +335,7 @@ export default function EnhancedTable({data, altData, tableProps}) {
 
         {headCells.map(head => {
           
-          let stringVal = row[head.id];
-          const dateStrings = ['dateEdited', 'dateCreated'];
-          const userIdStrings = ['submitter', 'creator', 'assignee', 'userId'];
-
-          //format dates into strings 
-          if (dateStrings.includes(head.id)) {
-
-            stringVal = new Date(stringVal.seconds * 1000 + stringVal.nanoseconds/1000000);
-            stringVal = stringVal.toISOString().split('T')[0];
-          } 
-          //Format user ID's into their names
-          else if (userIdStrings.includes(head.id)) { 
-            stringVal = users[row[head.id]].displayName;
-          }
-
+          let stringVal = truncateString(row[head.id], 100);
            return (head.id !== 'action') ? 
             <TableCell align="left" >{stringVal}</TableCell> 
             : 

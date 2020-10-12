@@ -1,5 +1,6 @@
  .projectPage {
     min-width:900px;
+
 } 
 
 .projectPageTop {
@@ -7,7 +8,8 @@
     display:flex;
     flex-direction: row;
     align-content: space-between;
-
+    word-wrap:normal;
+    white-space: normal;
 }    
 
 .detail {
@@ -31,11 +33,47 @@
 }    
 
 .card {
-    width:400px;
+    width:500px;
     margin:8px;
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
 }
 .cardHeader {
     background-color: #303030;
     color: white;
+    border-radius:0px;
+    height:48px;
+}
+
+
+
+.greyText {
+    /* color: #646464; */
+    position: relative;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    box-sizing: border-box;
+    padding-right: 24px;
+    min-width: 120px;
+    width: 25%;
     
+    max-width: 180px;
+    line-height: 1;
+    font-weight: bold !important;
+}
+
+.greyText2 {
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    width: 65%;
+    box-sizing: border-box;
+    /* padding-left:16px; */
+}
+
+.attributeContainer {
+    display: flex;
+    /* flex-wrap: wrap; */
+    margin-bottom: 16px;
+    word-break: break-word;
+   
 }

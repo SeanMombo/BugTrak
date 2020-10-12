@@ -9,7 +9,7 @@ export const tableSlice = createSlice({
         projects: {
             headers: [
                 { id: 'title', numeric: false, label: 'Title' },
-                { id: 'body', numeric: false, label: 'Description' },
+                { id: 'body', numeric: false, label: 'Description',},
                 { id: 'action', numeric: true, label: '' },  
               ],
               tableTitle: 'Projects',
@@ -57,7 +57,7 @@ export const tableSlice = createSlice({
         },
         comments_ticket: {
             headers: [
-                { id: 'userId', numeric: false, label: 'Commentor' },
+                { id: 'submitter', numeric: false, label: 'Commentor' },
                 { id: 'body', numeric: false, label: 'Message' },
                 { id: 'dateCreated', numeric: false, label: 'Created' },
                 // { id: 'action', numeric: true, label: '' },  

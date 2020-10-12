@@ -1,13 +1,19 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, {useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { actionTypes } from 'redux-firestore'
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const userQuery = {
     collection: 'users', 
 }
 
 function ManageUsers() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+      return () => dispatch({ type: actionTypes.CLEAR_DATA })
+  },[])
+  
   // Attach users listener
   useFirestoreConnect(() => [userQuery])
 

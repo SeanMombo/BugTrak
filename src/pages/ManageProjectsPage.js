@@ -1,20 +1,34 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, {useEffect} from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { actionTypes } from 'redux-firestore'
 import { useFirestoreConnect, isLoaded, isEmpty } from 'react-redux-firebase'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import DataTable from '../components/DataTable'
 import { selectTableProject } from '../redux/tableSlice';
+import './manageProjectsPage.scss';
 
-// import {
-//     useRouteMatch,
-//   } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect,
+    Link,
+    useHistory
+} from "react-router-dom";
+
 
 const projectQuery = {
     collection: 'projects', 
 }
 
 function ManageProjects() {
-    // let match = useRouteMatch();
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        return () => dispatch({ type: actionTypes.CLEAR_DATA })
+    },[])
 
     // Attach  listener
     useFirestoreConnect(() => [projectQuery])
@@ -26,7 +40,7 @@ function ManageProjects() {
 
     // Show a message while loading
     if (!isLoaded(projects)) {
-        return 'Loading'
+        return <CircularProgress/>
     }
 
     // Show a message if there is no data
@@ -34,21 +48,15 @@ function ManageProjects() {
         return 'Todo list is empty'
     }
 
-    // return projects.map(({ id, title, ...todo }, ind) => (
-    //     <h1 id={id}>{title}</h1>
-    // ))
-
     return (
-        <div>
+        <div className="manageProjectsPage">
+            
+            <div className="dataTableWrapper"> 
             <DataTable data={projects} tableProps={projectTableData}/>
-{/* 
-            <Switch>                
-                <Route path={match.path}>
-                </Route>
-            </Switch> */}
+            </div>
+            <div className="dataTableWrapper"> <DataTable data={projects} tableProps={projectTableData}/> </div>
+            
         </div>
-
-
     )
 }
 

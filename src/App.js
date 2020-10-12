@@ -4,9 +4,10 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firestore' // <- needed if using firestore
 import {
+
   ReactReduxFirebaseProvider,
   isLoaded, isEmpty,
-  useFirestoreConnect,
+
 } from 'react-redux-firebase'
 
 import { createFirestoreInstance } from 'redux-firestore' // <- needed if using firestore
@@ -18,9 +19,12 @@ import {
   Switch,
   Route,
   Redirect,
+  Link,
+  useHistory
 } from "react-router-dom";
 import './App.css'
 
+import BackButton from './components/BackButton'
 import ControlPanel from './components/ControlPanel/control-panel.component'
 import Header from './components/Header/header.component'
 // import SimpleModal from './components/Modal/Modal'
@@ -32,8 +36,7 @@ import ManageProjects from './pages/ManageProjectsPage'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
 import LoginPage from './pages/LoginPage'
-
-import Test from './components/test'
+import SimpleTabs from './pages/SimpleTabs'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7J1Jfu8DnMaKYK7XZmwymosz5w5xpluM",
@@ -49,7 +52,8 @@ const firebaseConfig = {
 // react-redux-firebase config
 const rrfConfig = {
   userProfile: 'users',
-  useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
+  useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
+  allowMultipleListeners: true,
 }
 
 // Initialize firebase instance
@@ -97,31 +101,30 @@ function PrivateRoute({ children, ...rest }) {
 // Setup react-redux so that connect HOC can be used
 function App() {
 
-  const usersQuery = {
-    collection: 'users', 
-  }
 
-  useFirestoreConnect(() => [usersQuery]);
+
   
-
   return (
     <Provider store={store}>
       <ReactReduxFirebaseProvider {...rrfProps}>
       
-      <Test/>
+      {/* <Test/> */}
         <Router>
+          
           <Header/>
           <ControlPanel/>
+          
           <div className='App'>
-
+          
             <Switch>
-
-              <Route  path="/login">
+            
+              <Route path="/login">
                 <LoginPage />
               </Route>
 
               <PrivateRoute  path="/manageprojects">
                 <ManageProjects />
+                {/* <SimpleTabs/> */}
               </PrivateRoute>
 
               <PrivateRoute  path="/project/:projectId">

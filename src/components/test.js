@@ -4,7 +4,7 @@ import { connect, useSelector } from 'react-redux'
 import { compose } from 'redux'
 import { firestoreConnect, isLoaded, isEmpty, populate, useFirestoreConnect } from 'react-redux-firebase'
 
-const populates = [
+const ticketPopulates = [
     { child: 'collaborators', root: 'users' }
   ]
 
@@ -12,14 +12,13 @@ const populates = [
 function Test() {
 
   const query = {
-    collection: 'users_projects', 
-    doc: 'AorzcehRS5SbF5trdxPH',
-    populates, 
+    collection: 'tickets', 
+    populates: ticketPopulates,
   }
 
   useFirestoreConnect(() => [query]);
 
-  const users_projects = useSelector(({ firestore }) => populate(firestore, "users_projects", populates));
+  const users_projects = useSelector(({ firestore }) => populate(firestore, "users_projects", ticketPopulates));
 
   // Show message while todos are loading
   if (!isLoaded(users_projects)) {

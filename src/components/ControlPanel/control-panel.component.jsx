@@ -1,7 +1,5 @@
 import React from 'react';
 
-
-
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -14,7 +12,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 
 import { Switch } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom'; 
+import { Link as RouterLink, useParams } from 'react-router-dom'; 
 
 function ListItemLink(props) {
   const { icon, primary, to, id, selectedIndex, handleListItemClick} = props;
@@ -24,6 +22,8 @@ function ListItemLink(props) {
     () => React.forwardRef((itemProps, ref) => <RouterLink to={to} ref={ref} {...itemProps} />),
     [to],
   );
+
+  
 
   return (
     <li>
@@ -70,28 +70,37 @@ const useStyles = makeStyles({
   },
 });
 
+
 function ControlPanel() {
   const classes = useStyles();
+
+  // const params = useParams();
+  // let t = 0;
+  // console.log(params)
+  // if (params === 'manageprojects') t = 2;
+  // else if (params === 'project') t = 2
+  // else if (params === 'tickets') t = 4
+
+
   const [selectedIndex, setSelectedIndex] = React.useState(0);
+
   const handleListItemClick = (event, index) => {
     setSelectedIndex(index);
   };
-  
+
+
   return (
     // <Switch initialEntries={['/users']} initialIndex={0}
     <Switch > 
       <div className={classes.root}>
-        {/* <Route>
-          {({ location }) => (
-            <Typography gutterBottom>Current route: {location.pathname}</Typography>
-          )}
-        </Route> */}
+
         <Paper elevation={2} className={classes.paper} square >
           <List aria-label="main mailbox folders">
-            <ListItemLink to="/manageusers" primary="Manage Users" icon={<InboxIcon />} id={0} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/manageprojects" primary="Manage Projects" icon={<DraftsIcon />} id={1} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/myprojects" primary="My Projects" icon={<InboxIcon />} id={2} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/mytickets" primary="My Tickets" icon={<DraftsIcon />} id={3} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink to="/" primary="Dashboard" icon={<InboxIcon />} id={0} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink to="/manageusers" primary="Manage Users" icon={<InboxIcon />} id={1} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink to="/manageprojects" primary="Manage Projects" icon={<DraftsIcon />} id={2} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink to="/myprojects" primary="My Projects" icon={<InboxIcon />} id={3} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink to="/mytickets" primary="My Tickets" icon={<DraftsIcon />} id={4} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
           </List>
          
         </Paper>
