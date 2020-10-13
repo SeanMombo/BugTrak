@@ -2,13 +2,13 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import Paper from '@material-ui/core/Paper';
 
-export const HeaderContainer = styled(Paper)`
-  height: 70px;
+export const HeaderContainer = styled.div`
+  height: 32px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   /* position:fixed; */
-
+  
   align-items: center;
   h1 {
     font-size:40px;
@@ -22,6 +22,7 @@ export const HeaderContainer = styled(Paper)`
   } */
 `;
 export const HeaderContainerWrapper = styled.div`
+  margin-left: 230px;
   /* margin-bottom: 32px; */
   `;
 
@@ -37,7 +38,7 @@ export const LogoContainer = styled(Link)`
 `;
 
 export const OptionsContainer = styled.div`
-  width: 50%;
+  width: 100%;
   height: 100%;
   display: flex;
   align-items: center;

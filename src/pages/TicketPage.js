@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider'
 
-import DataTable from '../components/DataTable';
+import DataTable from '../components/DataTable.jsx';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { truncateString } from '../utils'
@@ -27,6 +27,7 @@ const commentsPopulate = [
 function TicketPage() {
     const { ticketId } = useParams() // matches todos/:todoId in route
     const dispatch = useDispatch();
+    
     useEffect(() => {
         return () => dispatch({ type: actionTypes.CLEAR_DATA })
     },[])

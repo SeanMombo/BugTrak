@@ -7,12 +7,14 @@ import ListItem from '@material-ui/core/ListItem';
 import Paper from '@material-ui/core/Paper';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
-
+import PieChartIcon from '@material-ui/icons/PieChart';
 import { Switch } from 'react-router';
 import { Link as RouterLink, useParams } from 'react-router-dom'; 
+import './control-panel.styles.scss'
 
 function ListItemLink(props) {
   const { icon, primary, to, id, selectedIndex, handleListItemClick} = props;
@@ -47,28 +49,28 @@ ListItemLink.propTypes = {
   to: PropTypes.string.isRequired,
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     height:'100%',
     width: 230,
 
     // paddingRight:16,
- 
+
     position:'fixed',
     
   },
   paper: {
-    paddingTop:32,
-     marginTop:1,
+    // paddingTop:32,
+    //  marginTop:1,
     height:'100%',
+    // color:'white',
+    // backgroundColor: theme.palette.primary.dark,
   },
 
   noPadding: {
-
     paddingTop:0,
-
   },
-});
+}));
 
 
 function ControlPanel() {
@@ -93,14 +95,15 @@ function ControlPanel() {
     // <Switch initialEntries={['/users']} initialIndex={0}
     <Switch > 
       <div className={classes.root}>
-
-        <Paper elevation={2} className={classes.paper} square >
+      
+        <Paper className={`${classes.paper} controlPanel`} square elevation={3}>
+        <Typography className="bugTrackText" variant="h5" component="p">BugTrak</Typography>
+        <Divider/>
           <List aria-label="main mailbox folders">
-            <ListItemLink to="/" primary="Dashboard" icon={<InboxIcon />} id={0} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/manageusers" primary="Manage Users" icon={<InboxIcon />} id={1} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/manageprojects" primary="Manage Projects" icon={<DraftsIcon />} id={2} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/myprojects" primary="My Projects" icon={<InboxIcon />} id={3} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
-            <ListItemLink to="/mytickets" primary="My Tickets" icon={<DraftsIcon />} id={4} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink className="bold" to="/" primary="Dashboard" icon={<InboxIcon className="bold"/>} id={0} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink className="bold" to="/admin" primary="Admin Panel" icon={<DraftsIcon className="bold"/>} id={2} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink className="bold" to="/myprojects" primary="My Projects" icon={<InboxIcon className="bold"/>} id={3} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
+            <ListItemLink className="bold" to="/mytickets" primary="My Tickets" icon={<DraftsIcon className="bold"/>} id={4} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>
           </List>
          
         </Paper>

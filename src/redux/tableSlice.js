@@ -14,7 +14,7 @@ export const tableSlice = createSlice({
               ],
               tableTitle: 'Projects',
               buttonName: 'View Project',
-              linkRoute: '/project/'
+              linkRoute: '/projects/'
         },
         users_projects: {
             headers: [
@@ -80,13 +80,20 @@ export const tableSlice = createSlice({
               buttonName: '',
               linkRoute: ''
         },
+        modalOpen: false,
     },
-
+    
+    reducers: {
+        toggleModal(state, action) {
+            const bool = action.payload;
+            state.modalOpen = bool;
+        }
+    }
 })
 
 
 //actions
-// export const {} = tableSlice.actions;
+ export const { toggleModal } = tableSlice.actions;
 
 //selectors
 export const selectTableProject = state => state.tables.projects;

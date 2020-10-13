@@ -20,7 +20,15 @@
     /* width:400px;
     max-width:400px; */
     flex:1;
+    display:flex;
 }
+.editUsers {
+    flex:1;
+}
+.wrapTable {
+    flex:2;
+}
+
 .ticketTable {
     flex:2;
 }

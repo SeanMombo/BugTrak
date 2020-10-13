@@ -17,18 +17,26 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
 import { truncateString } from '../utils'
+import { Delete as DeleteForever, Edit, DescriptionIcon} from '@material-ui/icons'
 
-
-
+import { useFirestore } from 'react-redux-firebase'
 import { useHistory } from "react-router-dom";
+import { AddAPhotoOutlined } from '@material-ui/icons';
 // import { PlayCircleFilledWhite } from '@material-ui/icons';
 
+import ConfirmationDialogue from './ConfirmationDialog'
 
 function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
+  let aa = a[orderBy];
+  let bb = b[orderBy];
+
+  if (typeof a[orderBy] === 'string') aa = a[orderBy].toLowerCase();
+  if (typeof b[orderBy] === 'string') bb = b[orderBy].toLowerCase();
+
+  if (bb < aa) {
     return -1;
   }
-  if (b[orderBy] > a[orderBy]) {
+  if (bb > aa) {
     return 1;
   }
   return 0;
@@ -138,6 +146,8 @@ const EnhancedTableToolbar = (props) => {
     <Toolbar
       className={classes.root}
       variant="dense"
+      component={Paper}
+      square
     >
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         
@@ -184,7 +194,19 @@ const useStyles = makeStyles((theme) => ({
     width: 1,
   },
   button: {
-    minWidth: 122,
+    minWidth: 50,
+  },
+  buttonGroup: {
+   
+    display:'flex',
+    flexDirection:'row',
+    justifyContent:'flex-end',
+
+  },
+  deleteButton: {
+    minWidth: 54,
+    cursor:'pointer',
+    marginLeft:16
   },
   searchRoot: {
     display: 'flex',
@@ -210,6 +232,7 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
 
   const classes = useStyles();
   let history = useHistory();
+  const firestore = useFirestore();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
@@ -261,11 +284,6 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
 
 
 
-
-
-
-
-
   /////////////////////////////
 
   const searchData = (rows, str) => {
@@ -310,23 +328,21 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
+ 
   const handleManageProjectClick = (event) => {
-    console.log(event.currentTarget.value)
+    // console.log(event.currentTarget.value)
     history.push(linkRoute + `${event.currentTarget.value}`);
   }
 
-
+  const handleDeleteClick = (event) => {
+    firestore.delete(`projects/${event.currentTarget.value}`)
+  }
 
   // const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   const DisplayRow = ({row, buttonName}) => {
-    console.log(row)
     return (
       <TableRow
         hover
@@ -338,21 +354,38 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
           let stringVal = truncateString(row[head.id], 100);
            return (head.id !== 'action') ? 
             <TableCell align="left" >{stringVal}</TableCell> 
-            : 
-            <TableCell align="right">
-              <Button  
-                variant="contained" color="primary" size="small" 
-                className={classes.button}
-                value={row.id}
-                onClick={handleManageProjectClick}
-                >
-                {buttonName}
-              </Button>
-            </TableCell>
+            : tableTitle==='Projects' ?
+              <TableCell align="right">
+                <div className={classes.buttonGroup} align="right">
+                  <Button  
+                    variant="contained" color="primary" size="small" 
+                    className={classes.button}
+                    value={row.id}
+                    onClick={handleManageProjectClick}
+                    startIcon={<Edit />}
+                    >
+                    Edit
+                  </Button>
+                  <ConfirmationDialogue id={`${linkRoute}${row.id}`}/>
+                </div>
+              </TableCell>
+              : 
+              <TableCell align="right">
+                <Button  
+                  variant="contained" color="primary" size="small" 
+                  className={classes.button}
+                  value={row.id}
+                  onClick={handleManageProjectClick}
+                  >
+                  {buttonName}
+                </Button>
+
+                
+              </TableCell>
+
         })}
         
-        
-      
+    
       </TableRow>
     )
   }
@@ -363,12 +396,12 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
   return (
     <div className={classes.root}>
        
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} elevation={3}>
         
-        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} />
+        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} elevation={3} />
         <TextField
           // label="Dense"
-          id="filled-margin-dense"
+          id={`filled-margin-dense_${tableTitle}`}
           // defaultValue="Default Value"
           className={classes.textField}
           // helperText="Some important text"

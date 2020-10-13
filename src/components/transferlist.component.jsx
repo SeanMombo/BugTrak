@@ -152,7 +152,7 @@ function TransferList({users, users_projects, selectedProject, updateUsersProjec
     l2 = left.map(k => users.find(u => u.displayName === k).id);
     r2 = right.map(k => users.find(u => u.displayName === k).id);
 
-    updateUsersProjects(projId, r2);
+    // updateUsersProjects(projId, r2);
   };
 
   const customList = (title, items, text) => (

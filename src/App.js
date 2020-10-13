@@ -24,7 +24,7 @@ import {
 } from "react-router-dom";
 import './App.css'
 
-import BackButton from './components/BackButton'
+// import BackButton from './components/BackButton'
 import ControlPanel from './components/ControlPanel/control-panel.component'
 import Header from './components/Header/header.component'
 // import SimpleModal from './components/Modal/Modal'
@@ -32,7 +32,8 @@ import Header from './components/Header/header.component'
 // import Todos from './components/Todos'
 // import NewTodo from './components/NewTodo'
 // import ManageUsers from './pages/ManageUsersPage'
-import ManageProjects from './pages/ManageProjectsPage'
+import AdminPage from './pages/AdminPage.jsx'
+import ManageProjectsPage from './pages/ManageProjectsPage'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
 import LoginPage from './pages/LoginPage'
@@ -54,6 +55,7 @@ const rrfConfig = {
   userProfile: 'users',
   useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
   allowMultipleListeners: true,
+ 
 }
 
 // Initialize firebase instance
@@ -71,6 +73,7 @@ const store = configureStore({
 const rrfProps = {
   firebase,
   enableLogging: true,
+  logErrors: true,
   config: rrfConfig,
   dispatch: store.dispatch,
   createFirestoreInstance // <- needed if using firestore
@@ -110,34 +113,36 @@ function App() {
       
       {/* <Test/> */}
         <Router>
+        <ControlPanel/>
           
           <Header/>
-          <ControlPanel/>
           
           <div className='App'>
-          
-            <Switch>
-            
-              <Route path="/login">
-                <LoginPage />
-              </Route>
+            <div className='appWrapper'>
 
-              <PrivateRoute  path="/manageprojects">
-                <ManageProjects />
-                {/* <SimpleTabs/> */}
-              </PrivateRoute>
+              <Switch>
+              
+                <Route path="/login">
+                  <LoginPage />
+                </Route>
 
-              <PrivateRoute  path="/project/:projectId">
-                <ProjectPage />
-              </PrivateRoute>
-              
-              <PrivateRoute  path="/ticket/:ticketId">
-                <TicketPage />
-              </PrivateRoute>
-              
-              <PrivateRoute path="/">
-              </PrivateRoute>
-            </Switch>
+                <PrivateRoute  path="/admin">
+                  <AdminPage />
+                  {/* <SimpleTabs/> */}
+                </PrivateRoute>
+
+                <PrivateRoute  path="/project/:projectId">
+                  <ProjectPage />
+                </PrivateRoute>
+                
+                <PrivateRoute  path="/ticket/:ticketId">
+                  <TicketPage />
+                </PrivateRoute>
+                
+                <PrivateRoute path="/">
+                </PrivateRoute>
+              </Switch>
+            </div>
           </div>
         </Router>
         

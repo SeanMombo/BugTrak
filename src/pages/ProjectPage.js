@@ -4,7 +4,7 @@ import { useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-fi
 import { useParams } from 'react-router-dom'
 import { selectTableUsersProjects, selectTableTicketsProjects} from '../redux/tableSlice';
 import { actionTypes } from 'redux-firestore'
-import DataTable from '../components/DataTable'
+import DataTable from '../components/DataTable.jsx'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider'
@@ -13,7 +13,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import AddUsersToProject from '../components/AddUsersToProject';
+// import AddUsersToProject from '../components/AddUsersToProject';
 
 import './ProjectPage.css'
 
@@ -47,13 +47,14 @@ function ProjectPage() {
         populates: ticketPopulates,
     }
 
+    useEffect(() => {
+        return () => dispatch({ type: actionTypes.CLEAR_DATA })
+    },[])
 
     // Attach users listener
     useFirestoreConnect(() => [ticketsQuery, usersProjectsQuery, projectsQuery])
 
-    useEffect(() => {
-        return () => dispatch({ type: actionTypes.CLEAR_DATA }) // eslint-disable-next-line
-    },[]) 
+    
     
     const users_projects = useSelector(({ firestore }) => populate(firestore, 'users_projects', usersProjectsPopulates));
 
@@ -71,7 +72,7 @@ function ProjectPage() {
 
 
     // Show a message while users are loading
-    if (!isLoaded(project, users_projects, tickets)) {
+    if (!isLoaded(project, users_projects, tickets) ) {
         return <CircularProgress/>
     }
     
@@ -114,14 +115,17 @@ function ProjectPage() {
                     </CardContent>
 
                 </Card>
-
+                
                 <div className='userTable'>
-                    <AddUsersToProject />
-                {
+                    
+                    <div className='wrapTable'>
+                    {
                     !isEmpty(users_projects) ? 
-                        <DataTable data={usersInProject}  tableProps={tableUsersProjects}/> 
+                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects}/> 
                         : null
-                }       
+                    }       
+                    </div>
+                   
                 </div>  
             </div>
 
@@ -129,7 +133,7 @@ function ProjectPage() {
                 <div className='ticketTable'>
                 {
                     isLoaded(tickets) ? 
-                        <DataTable data={ticketsInProject} tableProps={tableTickets}/> 
+                        <DataTable key={ticketsInProject} data={ticketsInProject} tableProps={tableTickets}/> 
                         : null  
                 }   
                 </div>  

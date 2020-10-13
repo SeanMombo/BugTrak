@@ -10,28 +10,28 @@ import {
   HeaderContainerWrapper
 } from './header.styles';
 
-const Header = ({ currentUser, signOutStart }) => (
+const Header = ({ currentUser,}) => (
   <HeaderContainerWrapper>
 
-  <HeaderContainer square elevation={1}>
-    
-      <h1>BugTrak</h1>
-    
-      <OptionsContainer>
-        <OptionLink to='/shop'>SHOP</OptionLink>
-        <OptionLink to='/shop'>CONTACT</OptionLink>
-        {currentUser ? (
-          <OptionLink as='div' onClick={signOutStart}>
-            SIGN OUT
-          </OptionLink>
-        ) : (
-          <OptionLink to='/signin'>SIGN IN</OptionLink>
-        )}
+    <HeaderContainer square elevation={0}>
       
-      </OptionsContainer>
-          
-  </HeaderContainer>
-  {/* <Divider/> */}
+        
+      
+        <OptionsContainer>
+          <OptionLink to='/shop'></OptionLink>
+          <OptionLink to='/shop'></OptionLink>
+          {currentUser ? (
+            <OptionLink as='div'>
+              SIGN OUT
+            </OptionLink>
+          ) : (
+            <OptionLink to='/signin'></OptionLink>
+          )}
+        
+        </OptionsContainer>
+            
+    </HeaderContainer>
+    {/* <Divider/> */}
   </HeaderContainerWrapper>
 );
 

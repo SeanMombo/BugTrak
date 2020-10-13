@@ -1,8 +1,21 @@
 .manageProjectsPage {
+    width:80%;
+    margin: 0 auto;
     display:flex;
-    flex-direction: row;
-    width:5%;
+    flex-direction: column;
+    padding:32px;
+    background-color:rgb(250,250,250) !important;
+    background-color: transparent !important;
+    .innerWrapper {
+        display:flex;
+        flex-direction: row;
+    }
+    .modalWrapper {
+        margin:8px;
+    }
 }
+
+
 .dataTableWrapper {
-    flex:1;
+    flex:1; 
 }

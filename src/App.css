@@ -4,18 +4,27 @@ body {
     overflow-y:hidden;
 
     font-family: Roboto;
+    background-color: rgb(246,247,249);
 }
 
 #root {
    
 }
 .App {
-
+    
     height:100%;
     margin-left: 230px;
     padding:8px;
+    
+    /* display:flex; */
+}
+
+.appWrapper {
+     /* width: 80%;  */
+    padding:16px;
+    padding-top:0px;
     overflow-x: auto;
     overflow-y:hidden;
     white-space: nowrap;
-    /* display:flex; */
+    margin:auto auto;
 }

@@ -4,7 +4,7 @@ import { useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-fi
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
-const options = ['Option 1', 'Option 2'];
+// const options = ['Option 1', 'Option 2'];
 
 export default function ControllableStates() {
     const dispatch = useDispatch();
@@ -20,12 +20,16 @@ export default function ControllableStates() {
     // Attach users listener
     useFirestoreConnect(() => [usersQuery])
 
-
-
     const users = useSelector(
         ({ firestore: { ordered } }) => ordered.users 
     )
 
+    if (!isLoaded(users)) 
+        return 'loading'
+
+    let options = (users).map(user => {
+        return user['displayName']
+    })
 
     return (
     <div>
@@ -41,10 +45,13 @@ export default function ControllableStates() {
         onInputChange={(event, newInputValue) => {
             setInputValue(newInputValue);
         }}
+        autoComplete={true}
+        autoSelect={true}
+        autoHighlight={true}
         id="controllable-states-demo"
         options={options}
         style={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Controllable" variant="outlined" />}
+        renderInput={(params) => <TextField {...params} label="Controllable"  />}
         />
     </div>
     );
