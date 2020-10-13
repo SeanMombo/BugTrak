@@ -173,7 +173,7 @@ function SimpleTabs() {
           <AntTab label="Users" {...a11yProps(1)} />
         </AntTabs>
       
-      <TabPanel component="div" className={classes.tabPanel} value={value} index={0}>
+      <TabPanel  className={classes.tabPanel} value={value} index={0}>
         <ManageProjectsPage/>
       </TabPanel>
       <TabPanel className={classes.tabPanel} value={value} index={1}>

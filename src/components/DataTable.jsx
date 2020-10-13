@@ -20,7 +20,7 @@ import { truncateString } from '../utils'
 import { Delete as DeleteForever, Edit, DescriptionIcon} from '@material-ui/icons'
 
 import { useFirestore } from 'react-redux-firebase'
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { AddAPhotoOutlined } from '@material-ui/icons';
 // import { PlayCircleFilledWhite } from '@material-ui/icons';
 
@@ -112,12 +112,14 @@ EnhancedTableHead.propTypes = {
 const useToolbarStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+    paddingRight: theme.spacing(2),
 
     backgroundColor: '#303030',
     color:'white',
     display:'flex',
     flexDirection:'row',
+    justifyContent: 'flex-start',
+    
   },
   highlight:
     theme.palette.type === 'light'
@@ -135,26 +137,42 @@ const useToolbarStyles = makeStyles((theme) => ({
   textField: {
     backgroundColor:'white',
     color:'black',
+  },
+  searchField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: '25ch',
+    justifySelf:'flex-start'
+  },
+  addToTableButton: {
+    justifySelf:'flex-end'
   }
 }));
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { tableTitle } = props;
+  const { tableTitle, search, handleChangeSearch } = props;
 
   return (
     <Toolbar
       className={classes.root}
-      variant="dense"
+      // variant="dense"
       component={Paper}
       square
     >
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
         
         {tableTitle}
-       
       </Typography>
+
       
+
+      <Button 
+        variant="contained"
+        color="primary"
+        className={classes.addToTableButton}>
+          Add User
+      </Button>
     </Toolbar>
   );
 };
@@ -213,7 +231,7 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: 'wrap',
   },
   textField: {
-    marginLeft: theme.spacing(1),
+    marginLeft: theme.spacing(2),
     marginRight: theme.spacing(1),
     width: '25ch',
   },
@@ -229,7 +247,8 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
   tableTitle = tableProps.tableTitle;
   linkRoute = tableProps.linkRoute;
   buttonName = tableProps.buttonName;
-
+  let params = useParams();
+  
   const classes = useStyles();
   let history = useHistory();
   const firestore = useFirestore();
@@ -366,10 +385,16 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
                     >
                     Edit
                   </Button>
-                  <ConfirmationDialogue id={`${linkRoute}${row.id}`}/>
+                  <ConfirmationDialogue id={row.id} route={linkRoute}/>
                 </div>
               </TableCell>
-              : 
+              : tableTitle === 'Project Team' ?
+              <TableCell align="right">
+                <div className={classes.buttonGroup} align="right">
+                  <ConfirmationDialogue id={row.id} route={linkRoute}/>
+                </div>
+              </TableCell> 
+              : //default
               <TableCell align="right">
                 <Button  
                   variant="contained" color="primary" size="small" 
@@ -398,7 +423,7 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
        
       <Paper className={classes.paper} elevation={3}>
         
-        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} elevation={3} />
+        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} elevation={3} search={search} handleChangeSearch={handleChangeSearch} />
         <TextField
           // label="Dense"
           id={`filled-margin-dense_${tableTitle}`}
@@ -410,7 +435,6 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
           value={search}
           onChange={handleChangeSearch}
         />
-
         <TableContainer>
           <Table
             className={classes.table}

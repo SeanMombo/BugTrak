@@ -76,10 +76,12 @@ function ProjectPage() {
         return <CircularProgress/>
     }
     
-    let usersInProject = users_projects[projectId]['collaborators'];
+    let usersInProject = users_projects[projectId];
 
-    if (usersInProject)
+    if (usersInProject) {
+        usersInProject = usersInProject['collaborators']
         usersInProject = Object.values(usersInProject);
+    }
     else 
         usersInProject = [];
    

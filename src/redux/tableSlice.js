@@ -14,18 +14,20 @@ export const tableSlice = createSlice({
               ],
               tableTitle: 'Projects',
               buttonName: 'View Project',
-              linkRoute: '/projects/'
+              linkRoute: '/project/',
+              delRoute: '/projects/'
         },
         users_projects: {
             headers: [
                 { id: 'displayName', numeric: false, label: 'Name' },
                 { id: 'email', numeric: false, label: 'Email' },
                 { id: 'userType', numeric: false, label: 'Role' },
+                { id: 'action', numeric: true, label: '' },  
 
               ],
               tableTitle: 'Project Team',
               buttonName: '',
-              linkRoute: ''
+              linkRoute: '/users_projects/'
         },
         tickets_projects: {
             headers: [
