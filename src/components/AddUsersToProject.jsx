@@ -6,7 +6,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 // const options = ['Option 1', 'Option 2'];
 
-export default function ControllableStates() {
+export default function UserAutocomplete() {
     const dispatch = useDispatch();
 
     const [value, setValue] = React.useState('');
@@ -37,21 +37,21 @@ export default function ControllableStates() {
         <div>{`inputValue: '${inputValue}'`}</div>
         <br />
         <Autocomplete
-        value={value}
-        onChange={(event, newValue) => {
-            setValue(newValue);
-        }}
-        inputValue={inputValue}
-        onInputChange={(event, newInputValue) => {
-            setInputValue(newInputValue);
-        }}
-        autoComplete={true}
-        autoSelect={true}
-        autoHighlight={true}
-        id="controllable-states-demo"
-        options={options}
-        style={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Controllable"  />}
+            value={value}
+            onChange={(event, newValue) => {
+                setValue(newValue);
+            }}
+            inputValue={inputValue}
+            onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+            }}
+            autoComplete={true}
+            autoSelect={true}
+            autoHighlight={true}
+            id="controllable-states-demo"
+            options={options}
+            style={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Controllable"  />}
         />
     </div>
     );

@@ -1,15 +1,18 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
 import Dialog from '@material-ui/core/Dialog';
+
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
 import { useFirestore } from 'react-redux-firebase'
 import { Delete } from '@material-ui/icons'
 import { useParams } from 'react-router-dom';
-
+import Alert from '@material-ui/lab/Alert';
 import './ConfirmationDialogue.scss'
+
+
 export default function ConfirmationDialogue({id, route, visible}) {
     const [open, setOpen] = React.useState(visible);
     const { projectId } = useParams();
@@ -25,15 +28,15 @@ export default function ConfirmationDialogue({id, route, visible}) {
     const firestore = useFirestore();
 
     const handleAgree = () => {
-            if(open) {
-                if(route === '/project/') {
-                    firestore.delete(`/projects/${id}`)    
-                } else if(route === '/users_projects/') {
-                    firestore.update(`users_projects/${projectId}`, {
-                        collaborators: firestore.FieldValue.arrayRemove(`${id}`)
-                    })
-                }
-            }   
+        if(open) {
+            if(route === '/project/') {
+                firestore.delete(`/projects/${id}`)    
+            } else if(route === '/users_projects/') {
+                firestore.update(`users_projects/${projectId}`, {
+                    collaborators: firestore.FieldValue.arrayRemove(`${id}`)
+                })
+            }
+        }   
     };
 
 
@@ -57,25 +60,44 @@ export default function ConfirmationDialogue({id, route, visible}) {
             
 
         <Dialog
+            
             open={open}
             onClose={handleDisagree}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">{"Delete Data?"}</DialogTitle>
-            <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-                Are you sure you want to delete data?
-            </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={handleDisagree} color="primary">
-                Disagree
-            </Button>
-            <Button onClick={handleAgree} color="primary" autoFocus>
-                Agree
-            </Button>
-            </DialogActions>
+            <div className="dialogueBox">
+                <div className="marginBottom">
+                    <Typography variant='h6'>Delete Data</Typography>
+                </div>
+                
+                {/* <DialogTitle id="alert-dialog-title">{"Delete Data"}</DialogTitle> */}
+
+                <div className="marginBottom">
+                    {/* <DialogContentText id="alert-dialog-description">
+                        Are you sure you want to delete data?
+                    </DialogContentText> */}
+                    <Alert variant="filled" color="error" severity="warning">
+                        You are about to permanently delete data 
+                    </Alert>
+                </div>
+
+                {/* <div className="marginBottom">
+                    <Typography variant='subtitle1'>Path</Typography>
+                    <Typography variant='h5'>{id}</Typography>
+                    
+                </div> */}
+
+                <DialogActions className='dialogueActions'>
+                    <Button onClick={handleDisagree}  color="primary" autoFocus>
+                        Cancel 
+                    </Button>
+                    <Button onClick={handleAgree} variant="contained" color="secondary">
+                        Start Delete
+                    </Button>
+                </DialogActions>
+            </div>
+           
         </Dialog>
         </div>
     );

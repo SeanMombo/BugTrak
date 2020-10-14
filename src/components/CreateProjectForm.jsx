@@ -4,10 +4,9 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal } from '../redux/tableSlice'
-import { actionTypes } from 'redux-firestore'
-
-import { useFirestoreConnect, isLoaded, isEmpty, useFirestore } from 'react-redux-firebase'
-import {useHistory} from 'react-router-dom'
+import Typography from '@material-ui/core/Typography'
+import { useFirestore } from 'react-redux-firebase'
+import './CreateProjectForm.scss'
 
 
 const useStyles = makeStyles((theme) => ({
@@ -25,18 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     margin: 8,
-    marginLeft: 0,
+    marginLeft:  theme.spacing(1),
     marginRight: 0,
-    width:'100%'
+    // width:'100%'
   },
   nativeSelects: {
     maxWidth: 500,
   }
 }));
 
-const projectQuery = {
-  collection: 'projects', 
-}
 
 function CreateProjectForm() {
 
@@ -60,6 +56,9 @@ function CreateProjectForm() {
   const dispatch = useDispatch();
   const modalOpen = useSelector(state => state.tables.modalOpen);
 
+  function handleClose(event) {
+    dispatch(toggleModal(false))
+  }
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -91,7 +90,7 @@ function CreateProjectForm() {
 
   return (
     <div className={classes.nativeSelects}>
-        <h1>Create New Project</h1>
+         <Typography variant='h6'>Create Project</Typography>
         {/* <h3>Select a Role</h3> */}
         <form onSubmit={handleSubmit}>
           <TextField 
@@ -118,14 +117,25 @@ function CreateProjectForm() {
             }}
           />
             <br/>
-          <Button 
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            type="submit"> 
+            <div className="actionContainer">
+              <Button 
+              
+              color="primary"
+              className={classes.button}
+              onClick="handleClose"
+              autoFocus> 
+              Cancel
+            </Button>
+            <Button 
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              type="submit"> 
 
-            Create Project
-          </Button>
+              Create Project
+            </Button>
+          </div>
+         
         </form>
     </div>
   );

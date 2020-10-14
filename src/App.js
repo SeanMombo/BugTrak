@@ -19,8 +19,7 @@ import {
   Switch,
   Route,
   Redirect,
-  Link,
-  useHistory
+
 } from "react-router-dom";
 import './App.css'
 
@@ -33,11 +32,11 @@ import Header from './components/Header/header.component'
 // import NewTodo from './components/NewTodo'
 // import ManageUsers from './pages/ManageUsersPage'
 import AdminPage from './pages/AdminPage.jsx'
-import ManageProjectsPage from './pages/ManageProjectsPage'
+// import ManageProjectsPage from './pages/ManageProjectsPage'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
 import LoginPage from './pages/LoginPage'
-import SimpleTabs from './pages/SimpleTabs'
+// import SimpleTabs from './pages/SimpleTabs'
 
 const firebaseConfig = {
   apiKey: "AIzaSyC7J1Jfu8DnMaKYK7XZmwymosz5w5xpluM",

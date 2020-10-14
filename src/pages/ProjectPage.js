@@ -11,9 +11,10 @@ import Divider from '@material-ui/core/Divider'
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+// import CardHeader from '@material-ui/core/CardHeader';
+// import Autocomplete from '@material-ui/lab/Autocomplete';
 // import AddUsersToProject from '../components/AddUsersToProject';
+import { tableTypes } from '../constants';
 
 import './ProjectPage.css'
 
@@ -35,7 +36,10 @@ function ProjectPage() {
     const projectsQuery = {
         collection: 'projects',     
     }
-    
+    const usersQuery = {
+        collection: 'users',     
+        storeAs:'users2'
+    }
     const usersProjectsQuery = {
         collection: 'users_projects', 
         doc: projectId,
@@ -52,7 +56,7 @@ function ProjectPage() {
     },[])
 
     // Attach users listener
-    useFirestoreConnect(() => [ticketsQuery, usersProjectsQuery, projectsQuery])
+    useFirestoreConnect(() => [usersQuery, ticketsQuery, usersProjectsQuery, projectsQuery, ])
 
     
     
@@ -61,7 +65,9 @@ function ProjectPage() {
     const project = useSelector(
         ({ firestore: { data } }) => data.projects && data.projects[projectId]
     ) 
-   
+    const users = useSelector(
+        ({ firestore: { ordered } }) => ordered.users2 
+    ) 
 
     let tickets = useSelector(({ firestore }) => populate(firestore, 'tickets', ticketPopulates));
 
@@ -72,7 +78,7 @@ function ProjectPage() {
 
 
     // Show a message while users are loading
-    if (!isLoaded(project, users_projects, tickets) ) {
+    if (!isLoaded(project, users_projects, tickets, users) ) {
         return <CircularProgress/>
     }
     
@@ -122,8 +128,8 @@ function ProjectPage() {
                     
                     <div className='wrapTable'>
                     {
-                    !isEmpty(users_projects) ? 
-                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects}/> 
+                    !isEmpty(users_projects, users) ? 
+                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects} tableType={tableTypes.users_projects} users={users}/> 
                         : null
                     }       
                     </div>
@@ -135,7 +141,7 @@ function ProjectPage() {
                 <div className='ticketTable'>
                 {
                     isLoaded(tickets) ? 
-                        <DataTable key={ticketsInProject} data={ticketsInProject} tableProps={tableTickets}/> 
+                        <DataTable key={ticketsInProject} data={ticketsInProject} tableProps={tableTickets} tableType={tableTypes.tickets}/> 
                         : null  
                 }   
                 </div>  

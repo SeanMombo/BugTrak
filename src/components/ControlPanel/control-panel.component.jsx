@@ -11,9 +11,9 @@ import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
-import PieChartIcon from '@material-ui/icons/PieChart';
+// import PieChartIcon from '@material-ui/icons/PieChart';
 import { Switch } from 'react-router';
-import { Link as RouterLink, useParams } from 'react-router-dom'; 
+import { Link as RouterLink } from 'react-router-dom'; 
 import './control-panel.styles.scss'
 
 function ListItemLink(props) {

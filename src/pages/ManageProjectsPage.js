@@ -1,18 +1,15 @@
 import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { actionTypes } from 'redux-firestore'
-import { useFirestoreConnect, isLoaded, isEmpty, useFirestore } from 'react-redux-firebase'
+import { useFirestoreConnect, isLoaded, isEmpty} from 'react-redux-firebase'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import DataTable from '../components/DataTable.jsx'
-import Modal from '../components/Modal/Modal.jsx'
-import CreateProjectForm from '../components/CreateProjectForm.jsx'
+
 import { selectTableProject } from '../redux/tableSlice';
 import './ManageProjectsPage.scss';
 import Paper from '@material-ui/core/Paper'
-import {
+import { tableTypes } from '../constants'
 
-    useHistory
-} from "react-router-dom";
 
 
 const projectQuery = {
@@ -50,14 +47,14 @@ function ManageProjects() {
 
     return (
         <Paper className="manageProjectsPage" elevation={0}>
-            <div className="modalWrapper">
+            {/* <div className="modalWrapper">
                 <Modal>
                     <CreateProjectForm/>
                 </Modal>
-            </div>
+            </div> */}
             <div className="innerWrapper">
                 <div className="dataTableWrapper"> 
-                    <DataTable key={projects} data={projects} tableProps={projectTableData}/>
+                    <DataTable key={projects} data={projects} tableProps={projectTableData} tableType={tableTypes.projects}/>
                 </div>
             </div>
 

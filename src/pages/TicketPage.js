@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import Paper from '@material-ui/core/Paper';
+
 
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider'
@@ -14,7 +14,7 @@ import Divider from '@material-ui/core/Divider'
 import DataTable from '../components/DataTable.jsx';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { truncateString } from '../utils'
+
 import { selectTableHistoryTicket, selectTableCommentsTicket } from '../redux/tableSlice';
 
 import './TicketPage.scss';

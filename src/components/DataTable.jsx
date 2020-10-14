@@ -16,15 +16,21 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
+import Modal from '../components/Modal/Modal.jsx'
+import CreateProjectForm from '../components/CreateProjectForm.jsx'
 import { truncateString } from '../utils'
-import { Delete as DeleteForever, Edit, DescriptionIcon} from '@material-ui/icons'
+import { Edit, } from '@material-ui/icons'
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { useFirestore } from 'react-redux-firebase'
-import { useHistory, useParams } from "react-router-dom";
-import { AddAPhotoOutlined } from '@material-ui/icons';
-// import { PlayCircleFilledWhite } from '@material-ui/icons';
+import { useFirestore, useFirestoreConnect, isLoaded, isEmpty, } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
+import { useHistory } from "react-router-dom";
+
+import { tableTypes } from '../constants'
+
 
 import ConfirmationDialogue from './ConfirmationDialog'
+import AddUserDialogue from './AddUserDialogue'
 
 function descendingComparator(a, b, orderBy) {
   let aa = a[orderBy];
@@ -149,10 +155,11 @@ const useToolbarStyles = makeStyles((theme) => ({
   }
 }));
 
+
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { tableTitle, search, handleChangeSearch } = props;
-
+  const { tableTitle, tableType, users} = props;
+  console.log(tableType)
   return (
     <Toolbar
       className={classes.root}
@@ -161,18 +168,14 @@ const EnhancedTableToolbar = (props) => {
       square
     >
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-        
         {tableTitle}
       </Typography>
-
       
-
-      <Button 
-        variant="contained"
-        color="primary"
-        className={classes.addToTableButton}>
-          Add User
-      </Button>
+      { tableType === tableTypes.users_projects ? <AddUserDialogue users={users}/> 
+        :  tableType === tableTypes.projects ? <Modal><CreateProjectForm/></Modal> 
+        : null
+      }
+      
     </Toolbar>
   );
 };
@@ -239,7 +242,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EnhancedTable({data, altData, tableProps, isLoading}) {
+export default function EnhancedTable({data, users, tableProps, isLoading, tableType}) {
 
   let headCells, linkRoute, tableTitle, buttonName;
 
@@ -247,8 +250,8 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
   tableTitle = tableProps.tableTitle;
   linkRoute = tableProps.linkRoute;
   buttonName = tableProps.buttonName;
-  let params = useParams();
-  
+ 
+
   const classes = useStyles();
   let history = useHistory();
   const firestore = useFirestore();
@@ -298,6 +301,18 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
 
 
   /////////////////////////
+  // const usersQuery = {
+  //   collection: 'users', 
+  // }
+
+  // // Attach users listener
+  // useFirestoreConnect(() => [usersQuery])
+
+  // const users = useSelector(
+  //     ({ firestore: { ordered } }) => ordered.users 
+  // )
+
+  // if (!isLoaded(users)) return <CircularProgress/>
 
   /////////////////////////
 
@@ -347,20 +362,17 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
     setPage(0);
   };
 
- 
   const handleManageProjectClick = (event) => {
     // console.log(event.currentTarget.value)
     history.push(linkRoute + `${event.currentTarget.value}`);
   }
 
-  const handleDeleteClick = (event) => {
-    firestore.delete(`projects/${event.currentTarget.value}`)
-  }
 
   // const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  ////////////// DISPLAY ROW /////////////////////////////////////////////////////////////////////////////
   const DisplayRow = ({row, buttonName}) => {
     return (
       <TableRow
@@ -423,7 +435,7 @@ export default function EnhancedTable({data, altData, tableProps, isLoading}) {
        
       <Paper className={classes.paper} elevation={3}>
         
-        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} altData={altData} elevation={3} search={search} handleChangeSearch={handleChangeSearch} />
+        <EnhancedTableToolbar numSelected={selected.length} tableTitle={tableTitle} elevation={3} users={users} tableType={tableType}/>
         <TextField
           // label="Dense"
           id={`filled-margin-dense_${tableTitle}`}

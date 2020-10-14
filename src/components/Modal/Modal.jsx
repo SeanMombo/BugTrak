@@ -1,6 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from 'react-redux'
 import {toggleModal} from '../../redux/tableSlice'
@@ -19,15 +21,19 @@ function getModalStyle() {
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    // width: '50%',
-    position: 'absolute',
+    // // width: '50%',
+    // position: 'absolute',
     
-    backgroundColor: theme.palette.background.paper,
-    // border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    outline: 0
+    // backgroundColor: theme.palette.background.paper,
+    // // border: '2px solid #000',
+    // boxShadow: theme.shadows[5],
+    padding: theme.spacing(4),
+    // outline: 0
   },
+  button: {
+    // backgroundColor: theme.palette.primary.light,
+    // border: '1px lightgrey solid',
+  }
 }));
 
 export default function SimpleModal(props) {
@@ -50,22 +56,25 @@ export default function SimpleModal(props) {
   return (
     <div>
      <Button  
-        variant="contained" color="primary" size="small" 
+        variant="contained" 
+        color="primary" 
+        size="small" 
         onClick={handleOpen}
+        className={classes.button}
         >
         Create Project
       </Button>
 
-      <Modal
+      <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
-      <div style={modalStyle} className={classes.paper}>
+      <div  className={classes.paper}>
         {props.children}
       </div>
-      </Modal>
+      </Dialog>
     </div>
   );
 }

@@ -23,12 +23,12 @@ function ManageUsers() {
 
   // Show a message while users are loading
   if (!isLoaded(users)) {
-    return 'Loading'
+    return <CircularProgress/>
   }
 
   // Show a message if there are no users
   if (isEmpty(users)) {
-    return 'Todo list is empty'
+    return 'No Data'
   }
 
   return users.map(({ id, displayName, ...todo }, ind) => (
