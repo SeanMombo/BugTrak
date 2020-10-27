@@ -8,15 +8,26 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 import { useFirestore } from 'react-redux-firebase'
 import { Delete } from '@material-ui/icons'
+import ArchiveIcon from '@material-ui/icons/Archive';
 import { useParams } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import './ConfirmationDialogue.scss'
+import { tableTypes } from '../constants'
 
+export default function ConfirmationDialogue({id, route, visible, tableType}) {
+    
+    switch(tableType) {
+        case tableTypes.projects: {
+            break;
+        }
+    }
 
-export default function ConfirmationDialogue({id, route, visible}) {
     const [open, setOpen] = React.useState(visible);
-    const { projectId } = useParams();
-    console.log(projectId, id)
+    const params = useParams();
+    const urlId = Object.values(params)[0];
+
+    console.log(id, urlId, params);
+
     const handleOpen = () => {
         setOpen(true);
     };  
@@ -29,11 +40,17 @@ export default function ConfirmationDialogue({id, route, visible}) {
 
     const handleAgree = () => {
         if(open) {
-            if(route === '/project/') {
+            if(tableType === tableTypes.project) {
                 firestore.delete(`/projects/${id}`)    
-            } else if(route === '/users_projects/') {
-                firestore.update(`users_projects/${projectId}`, {
+            } 
+            else if(tableType === tableTypes.users_projects) {
+                firestore.update(`users_projects/${urlId}`, {
                     collaborators: firestore.FieldValue.arrayRemove(`${id}`)
+                })
+            } 
+            else if(tableType === tableTypes.tickets) {
+                firestore.update(`tickets/${urlId}`, {
+                    status: 'resolved'
                 })
             }
         }   
@@ -41,22 +58,33 @@ export default function ConfirmationDialogue({id, route, visible}) {
 
 
   
-
-
     return (
         <div>
+            {
+                tableType === tableTypes.tickets ? <Button 
+                className="closeButton" 
+                onClick={handleOpen}  
+                variant="contained" 
+                color="secondary" 
+                size="small" 
+                startIcon={ <ArchiveIcon/> }
+                >
+                Archive
+            </Button> 
+            : 
             <Button 
                 className="closeButton" 
                 onClick={handleOpen}  
                 variant="contained" 
                 color="secondary" 
                 size="small" 
-                startIcon={<Delete/>}
+                startIcon={ <Delete/> }
                 >
 
-        
                 Delete
             </Button>
+            }
+            
             
 
         <Dialog

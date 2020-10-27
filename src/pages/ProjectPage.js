@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react'
+import { createSelector } from 'reselect'
 import { useSelector, useDispatch } from 'react-redux'
 import { useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-firebase'
 import { useParams } from 'react-router-dom'
 import { selectTableUsersProjects, selectTableTicketsProjects} from '../redux/tableSlice';
+import { selectUsers } from '../redux/usersSlice';
+
+
 import { actionTypes } from 'redux-firestore'
 import DataTable from '../components/DataTable.jsx'
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -24,13 +28,13 @@ const usersProjectsPopulates = [
 ];
 
 const ticketPopulates = [
-    { child: 'assignee', root: 'users' },
-    { child: 'submitter', root: 'users' }
+    { child: 'assignee', root: 'users', keyProp: 'id' },
+    { child: 'submitter', root: 'users', keyProp: 'id' }
 ];
 
 function ProjectPage() {
 
-    const { projectId } = useParams() // matches todos/:todoId in route
+    const { projectId } = useParams() 
     const dispatch = useDispatch();
     
     const projectsQuery = {
@@ -38,17 +42,17 @@ function ProjectPage() {
     }
     const usersQuery = {
         collection: 'users',     
-        storeAs:'users2'
     }
     const usersProjectsQuery = {
         collection: 'users_projects', 
         doc: projectId,
-        populates: usersProjectsPopulates,
+        // populates: usersProjectsPopulates,
+
     }
     const ticketsQuery = {
         collection: 'tickets', 
         where: [['projectId', '==', projectId]],
-        populates: ticketPopulates,
+        // populates: ticketPopulates,
     }
 
     useEffect(() => {
@@ -56,54 +60,62 @@ function ProjectPage() {
     },[])
 
     // Attach users listener
-    useFirestoreConnect(() => [usersQuery, ticketsQuery, usersProjectsQuery, projectsQuery, ])
+    useFirestoreConnect(() => [ ticketsQuery, projectsQuery, usersProjectsQuery ])
 
-    
-    
-    const users_projects = useSelector(({ firestore }) => populate(firestore, 'users_projects', usersProjectsPopulates));
+    const users_projects = useSelector(
+        ({ firestore: { data } }) => data.users_projects
+    ) 
+    const tickets = useSelector(
+        ({ firestore: { data } }) => data.tickets
+    ) 
+
+    const users = useSelector(selectUsers) 
 
     const project = useSelector(
         ({ firestore: { data } }) => data.projects && data.projects[projectId]
     ) 
-    const users = useSelector(
-        ({ firestore: { ordered } }) => ordered.users2 
-    ) 
 
-    let tickets = useSelector(({ firestore }) => populate(firestore, 'tickets', ticketPopulates));
 
     let tableUsersProjects = useSelector(selectTableUsersProjects);
-
     let tableTickets = useSelector(selectTableTicketsProjects);
 
-
-
     // Show a message while users are loading
-    if (!isLoaded(project, users_projects, tickets, users) ) {
+    if (!isLoaded(project, tickets, users_projects, users) ) {
         return <CircularProgress/>
     }
     
-    let usersInProject = users_projects[projectId];
-
-    if (usersInProject) {
-        usersInProject = usersInProject['collaborators']
-        usersInProject = Object.values(usersInProject);
+    let newArr = [];
+    let usersInProject = users_projects[projectId]['collaborators'];
+    if (usersInProject && Object.keys(usersInProject).length !== 0) {
+        
+        newArr = usersInProject.map(key => {
+            return {...users[key]}
+        });
     }
     else 
         usersInProject = [];
-   
+    usersInProject = newArr;
+
+    const usersNotInProject = Object.values(users);
+
+
 
     //add an id field to tickets. This happens automatically for usersInProject, but not for tickets bc we do a where: [] in the query.
     let ticketsInProject = tickets;
-
-    if (ticketsInProject)
-        ticketsInProject = Object.keys(ticketsInProject).map(key => {
-            const newObj = Object.assign({id: key}, ticketsInProject[key]);
-
+    if (ticketsInProject) {
+        ticketsInProject = Object.keys(ticketsInProject);
+        ticketsInProject = ticketsInProject.map(key => {
+            const newObj = {...tickets[key]};
+            newObj['assignee'] = users[newObj['assignee']];
+            newObj['submitter'] = users[newObj['submitter']];
+            newObj['id'] = key;
             return newObj;
-        });
-    else 
-        ticketsInProject = [];
-
+        }) 
+    } else {
+        ticketsInProject = []
+    }
+    
+    console.log(users, ticketsInProject, usersInProject)
     return (
         <div className='projectPage'>
             <div className='projectPageTop'>
@@ -112,11 +124,9 @@ function ProjectPage() {
             
                     </CardHeader> */}
                     <CardContent>
-                        
                             {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
                             <Typography className='greyText2' variant='h4' component='h4' gutterBottom >{project.title}</Typography>
                         
-
                         <Divider/><br/>
                         {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography> */}
                         <Typography  variant='p' component='p' gutterBottom >{project.body}</Typography>
@@ -125,15 +135,11 @@ function ProjectPage() {
                 </Card>
                 
                 <div className='userTable'>
-                    
                     <div className='wrapTable'>
                     {
-                    !isEmpty(users_projects, users) ? 
-                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects} tableType={tableTypes.users_projects} users={users}/> 
-                        : null
+                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects} tableType={tableTypes.users_projects} users={usersNotInProject}/>  
                     }       
                     </div>
-                   
                 </div>  
             </div>
 

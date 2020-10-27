@@ -20,7 +20,7 @@ export default function AddUserDialogue({ users, visible}) {
     const { projectId } = useParams();
  
     const firestore = useFirestore();
-
+    console.log(users)
     const handleOpen = () => {
         setOpen(true);
     };  
@@ -36,26 +36,6 @@ export default function AddUserDialogue({ users, visible}) {
     }; 
 
   
-    
-        
-
-    // let options = (users).map(user => {
-    //     return user['displayName']
-    // })
-
-    
-
-    // const handleAgree = () => {
-    //     if(open) {
-    //         if(route === '/project/') {
-    //             firestore.delete(`/projects/${id}`)    
-    //         } else if(route === '/users_projects/') {
-    //             firestore.update(`users_projects/${projectId}`, {
-    //                 collaborators: firestore.FieldValue.arrayRemove(`${id}`)
-    //             })
-    //         }
-    //     }   
-    // };
     function UserAutocomplete() {
 
         return (

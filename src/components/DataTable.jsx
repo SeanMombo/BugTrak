@@ -158,7 +158,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { tableTitle, tableType, users} = props;
+  const { tableTitle, tableType, users } = props;
   console.log(tableType)
   return (
     <Toolbar
@@ -367,13 +367,12 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
     history.push(linkRoute + `${event.currentTarget.value}`);
   }
 
-
   // const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   ////////////// DISPLAY ROW /////////////////////////////////////////////////////////////////////////////
-  const DisplayRow = ({row, buttonName}) => {
+  const DisplayRow = ({row, buttonName, tableType}) => {
     return (
       <TableRow
         hover
@@ -385,7 +384,8 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
           let stringVal = truncateString(row[head.id], 100);
            return (head.id !== 'action') ? 
             <TableCell align="left" >{stringVal}</TableCell> 
-            : tableTitle==='Projects' ?
+
+            : tableType === tableTypes.projects ?
               <TableCell align="right">
                 <div className={classes.buttonGroup} align="right">
                   <Button  
@@ -397,15 +397,35 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
                     >
                     Edit
                   </Button>
-                  <ConfirmationDialogue id={row.id} route={linkRoute}/>
+                  <ConfirmationDialogue id={row.id} route={linkRoute} tableType={tableType}/>
                 </div>
               </TableCell>
-              : tableTitle === 'Project Team' ?
+
+              //Project Team table on ProjectPage
+              : tableType === tableTypes.users_projects ?
               <TableCell align="right">
                 <div className={classes.buttonGroup} align="right">
-                  <ConfirmationDialogue id={row.id} route={linkRoute}/>
+                  <ConfirmationDialogue id={row.id} route={linkRoute} tableType={tableType}/>
                 </div>
               </TableCell> 
+
+              //Tickets table on TicketPage
+              : tableType === tableTypes.tickets ?
+              <TableCell align="right">
+
+                <div className={classes.buttonGroup} align="right">
+                <Button  
+                  variant="contained" color="primary" size="small" 
+                  className={classes.button}
+                  value={row.id}
+                  onClick={handleManageProjectClick}
+                  >
+                  {buttonName}
+                </Button>
+                  <ConfirmationDialogue id={row.id} route={linkRoute} tableType={tableType}/>
+                </div>
+              </TableCell> 
+
               : //default
               <TableCell align="right">
                 <Button  
@@ -426,8 +446,6 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
       </TableRow>
     )
   }
-
-
 
 
   return (
@@ -472,7 +490,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
                 .map((row, index) => {
 
                   return (
-                    <DisplayRow row={row} buttonName={buttonName}/>
+                    <DisplayRow row={row} buttonName={buttonName} tableType={tableType}/>
                   );
                 })}
               {emptyRows > 0 && (

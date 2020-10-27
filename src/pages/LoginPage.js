@@ -8,6 +8,8 @@ import {
   Redirect,
 
 } from "react-router-dom";
+
+
 function LoginPage () {
   const firebase = useFirebase()
   const auth = useSelector(state => state.firebase.auth)
@@ -15,8 +17,6 @@ function LoginPage () {
   function loginWithGoogle() {
     return firebase.login({ provider: 'google', type: 'popup' })
   }
-
-
 
   return (
     <div >

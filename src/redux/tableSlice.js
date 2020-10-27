@@ -23,7 +23,6 @@ export const tableSlice = createSlice({
                 { id: 'email', numeric: false, label: 'Email' },
                 { id: 'userType', numeric: false, label: 'Role' },
                 { id: 'action', numeric: true, label: '' },  
-
               ],
               tableTitle: 'Project Team',
               buttonName: '',
@@ -51,7 +50,6 @@ export const tableSlice = createSlice({
                 { id: 'priority', numeric: false, label: 'Priority' },
                 { id: 'dateCreated', numeric: false, label: 'Date Created' },
                 { id: 'action', numeric: true, label: '' },  
-
               ],
               tableTitle: 'Tickets',
               buttonName: '',
@@ -63,7 +61,6 @@ export const tableSlice = createSlice({
                 { id: 'body', numeric: false, label: 'Message' },
                 { id: 'dateCreated', numeric: false, label: 'Created' },
                 // { id: 'action', numeric: true, label: '' },  
-
               ],
               tableTitle: 'Comments',
               buttonName: '',
@@ -76,7 +73,6 @@ export const tableSlice = createSlice({
                 { id: 'prevVal', numeric: false, label: 'Previous Value' },
                 { id: 'dateEdited', numeric: false, label: 'Date Changed' },
                 // { id: 'action', numeric: true, label: '' },  
-
               ],
               tableTitle: 'Ticket History',
               buttonName: '',
@@ -95,7 +91,7 @@ export const tableSlice = createSlice({
 
 
 //actions
- export const { toggleModal } = tableSlice.actions;
+export const { toggleModal } = tableSlice.actions;
 
 //selectors
 export const selectTableProject = state => state.tables.projects;
