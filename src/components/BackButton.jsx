@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import {useHistory} from 'react-router-dom'
-
-
+import Button from '@material-ui/core/Button'
+import './BackButton.scss';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 function BackButton() {
 
   const history = useHistory();
@@ -11,12 +12,19 @@ function BackButton() {
   }
   
   return (
-    <button
-      
-      onClick={handleBack}
-    >
+    <>
+      <Button 
+      className="backButton" 
+      onClick={handleBack}  
+      variant="contained" 
+      // color="secondary" 
+      size="small" 
+      startIcon={<ArrowBackIcon/>}
+      >
       Back
-    </button >
+      </Button> 
+      <br/><br/>
+    </>
   )
 }
 

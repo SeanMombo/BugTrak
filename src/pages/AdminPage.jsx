@@ -165,8 +165,6 @@ function SimpleTabs() {
   };
   const dispatch = useDispatch();
 
-
-
   return (
     <div className={classes.root}>
       

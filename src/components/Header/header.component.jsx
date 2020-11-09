@@ -1,6 +1,6 @@
 import React from 'react';
-
-
+import { useSelector } from 'react-redux'
+import { useFirebase } from 'react-redux-firebase'
 
 import {
   HeaderContainer,
@@ -10,22 +10,24 @@ import {
   HeaderContainerWrapper
 } from './header.styles';
 
-const Header = ({ currentUser,}) => (
+const Header = () => {
+  const auth = useSelector(state => state.firebase.auth)
+  const firebase = useFirebase();
+
+  return (
   <HeaderContainerWrapper>
 
-    <HeaderContainer square elevation={0}>
-      
-        
+    <HeaderContainer square elevation={1}>
       
         <OptionsContainer>
-          <OptionLink to='/shop'></OptionLink>
-          <OptionLink to='/shop'></OptionLink>
-          {currentUser ? (
-            <OptionLink as='div'>
+          {/* <OptionLink to='/shop'>SHOP</OptionLink>
+          <OptionLink to='/shop'></OptionLink> */}
+          {auth.uid ? (
+            <OptionLink to='/signout' onClick={firebase.logout}>
               SIGN OUT
             </OptionLink>
           ) : (
-            <OptionLink to='/signin'></OptionLink>
+            <OptionLink to='/signin'>SIGN IN</OptionLink>
           )}
         
         </OptionsContainer>
@@ -33,7 +35,7 @@ const Header = ({ currentUser,}) => (
     </HeaderContainer>
     {/* <Divider/> */}
   </HeaderContainerWrapper>
-);
+)};
 
 
 

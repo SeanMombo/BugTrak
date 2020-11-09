@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal } from '../redux/tableSlice'
 import Typography from '@material-ui/core/Typography'
 import { useFirestore } from 'react-redux-firebase'
+
+
 import './CreateProjectForm.scss'
 
 
@@ -36,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 function CreateProjectForm() {
 
-  
-
   const classes = useStyles();
   const [state, setState] = React.useState({
     title: '',
@@ -55,6 +55,7 @@ function CreateProjectForm() {
   const firestore = useFirestore();
   const dispatch = useDispatch();
   const modalOpen = useSelector(state => state.tables.modalOpen);
+  const auth = useSelector(state => state.firestore.auth);
 
   function handleClose(event) {
     dispatch(toggleModal(false))
@@ -67,22 +68,42 @@ function CreateProjectForm() {
       alert('Cannot create a project with empty title or description');
       return ;
     }
+
+    //create project collection
     const newProj = { 
       title: state.title,
       body: state.body,
       dateCreated: firestore.Timestamp.fromDate(new Date()),
     };
-
+    let docRef;
     try {
-      await firestore.collection('projects').add(newProj)
-      
+      docRef = await firestore.collection('projects').add(newProj);
+      console.log(docRef);
       alert('Project successfully created!')
+      
+      //create users_projects collection
+      const newUsersProj = { 
+        collaborators: []
+      };
+      
+      try {
+        await firestore.collection('users_projects').doc(docRef.id).set(newUsersProj)
+        
+        alert('users_projects successfully created!')
+
+      } catch(error) {
+        alert(error.code, error.message)
+        dispatch(toggleModal(false))
+      }
+
       dispatch(toggleModal(false))
 
     } catch(error) {
       alert(error.code, error.message)
       dispatch(toggleModal(false))
     }
+
+    
 
   }
 
@@ -119,10 +140,9 @@ function CreateProjectForm() {
             <br/>
             <div className="actionContainer">
               <Button 
-              
               color="primary"
               className={classes.button}
-              onClick="handleClose"
+              onClick={handleClose}
               autoFocus> 
               Cancel
             </Button>

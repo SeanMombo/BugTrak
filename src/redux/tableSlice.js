@@ -52,7 +52,7 @@ export const tableSlice = createSlice({
                 { id: 'action', numeric: true, label: '' },  
               ],
               tableTitle: 'Tickets',
-              buttonName: '',
+              buttonName: 'View Ticket',
               linkRoute: '/ticket/'
         },
         comments_ticket: {

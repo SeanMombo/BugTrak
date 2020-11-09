@@ -395,7 +395,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
                     onClick={handleManageProjectClick}
                     startIcon={<Edit />}
                     >
-                    Edit
+                    View
                   </Button>
                   <ConfirmationDialogue id={row.id} route={linkRoute} tableType={tableType}/>
                 </div>

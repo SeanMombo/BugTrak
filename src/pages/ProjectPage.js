@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { createSelector } from 'reselect'
+// import { createSelector } from 'reselect'
 import { useSelector, useDispatch } from 'react-redux'
-import { useFirestoreConnect, isLoaded, isEmpty, populate } from 'react-redux-firebase'
+import { useFirestoreConnect, isLoaded,} from 'react-redux-firebase'
 import { useParams } from 'react-router-dom'
 import { selectTableUsersProjects, selectTableTicketsProjects} from '../redux/tableSlice';
 import { selectUsers } from '../redux/usersSlice';
@@ -23,14 +23,14 @@ import { tableTypes } from '../constants';
 import './ProjectPage.css'
 
 
-const usersProjectsPopulates = [
-    { child: 'collaborators', root: 'users' }
-];
+// const usersProjectsPopulates = [
+//     { child: 'collaborators', root: 'users' }
+// ];
 
-const ticketPopulates = [
-    { child: 'assignee', root: 'users', keyProp: 'id' },
-    { child: 'submitter', root: 'users', keyProp: 'id' }
-];
+// const ticketPopulates = [
+//     { child: 'assignee', root: 'users', keyProp: 'id' },
+//     { child: 'submitter', root: 'users', keyProp: 'id' }
+// ];
 
 function ProjectPage() {
 
@@ -40,9 +40,9 @@ function ProjectPage() {
     const projectsQuery = {
         collection: 'projects',     
     }
-    const usersQuery = {
-        collection: 'users',     
-    }
+    // const usersQuery = {
+    //     collection: 'users',     
+    // }
     const usersProjectsQuery = {
         collection: 'users_projects', 
         doc: projectId,
@@ -103,8 +103,8 @@ function ProjectPage() {
     //add an id field to tickets. This happens automatically for usersInProject, but not for tickets bc we do a where: [] in the query.
     let ticketsInProject = tickets;
     if (ticketsInProject) {
-        ticketsInProject = Object.keys(ticketsInProject);
-        ticketsInProject = ticketsInProject.map(key => {
+
+        ticketsInProject = Object.keys(ticketsInProject).map(key => {
             const newObj = {...tickets[key]};
             newObj['assignee'] = users[newObj['assignee']];
             newObj['submitter'] = users[newObj['submitter']];
@@ -117,42 +117,44 @@ function ProjectPage() {
     
     console.log(users, ticketsInProject, usersInProject)
     return (
-        <div className='projectPage'>
-            <div className='projectPageTop'>
-                <Card className='card' elevation={3}>
-                    {/* <CardHeader className='cardHeader' title='Project Details' variant="dense">
-            
-                    </CardHeader> */}
-                    <CardContent>
-                            {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
-                            <Typography className='greyText2' variant='h4' component='h4' gutterBottom >{project.title}</Typography>
-                        
-                        <Divider/><br/>
-                        {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography> */}
-                        <Typography  variant='p' component='p' gutterBottom >{project.body}</Typography>
-                    </CardContent>
-
-                </Card>
+        <div>
+            <Typography className='title' variant="h4" component="h1">Project Details</Typography>
+            <br/><Divider/>
+            <div className='projectPage'>
+                <div className='projectPageTop'>
+                    <Card className='card' elevation={3}>
+                        {/* <CardHeader className='cardHeader' title='Project Details' variant="dense">
                 
-                <div className='userTable'>
-                    <div className='wrapTable'>
+                        </CardHeader> */}
+                        <CardContent>
+                                {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
+                                <Typography className='greyText2' variant='h4' component='h4' gutterBottom >{project.title}</Typography>
+                            
+                            <Divider/><br/>
+                            {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography> */}
+                            <Typography  variant='p' component='p' gutterBottom >{project.body}</Typography>
+                        </CardContent>
+
+                    </Card>
+                    
+                    <div className='userTable'>
+                        <div className='wrapTable'>
+                        {
+                            <DataTable key={usersInProject} data={usersInProject} tableProps={tableUsersProjects} tableType={tableTypes.users_projects} users={usersNotInProject}/>  
+                        }       
+                        </div>
+                    </div>  
+                </div>
+
+                <div className='projectPageBottom'>
+                    <div className='ticketTable'>
                     {
-                        <DataTable key={usersInProject} data={usersInProject}  tableProps={tableUsersProjects} tableType={tableTypes.users_projects} users={usersNotInProject}/>  
-                    }       
-                    </div>
-                </div>  
-            </div>
-
-            <div className='projectPageBottom'>
-                <div className='ticketTable'>
-                {
-                    isLoaded(tickets) ? 
                         <DataTable key={ticketsInProject} data={ticketsInProject} tableProps={tableTickets} tableType={tableTypes.tickets}/> 
-                        : null  
-                }   
-                </div>  
+                    }   
+                    </div>  
 
-            </div>      
+                </div>      
+            </div>
         </div>
     )
 }

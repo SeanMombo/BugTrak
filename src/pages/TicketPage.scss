@@ -24,6 +24,9 @@ $cutout-size: 1rem;
       margin: 0;
     }
 
+    .title {
+        padding-left:8px !important;
+    }
     .topRow {
         display:flex;
         flex-direction:row;

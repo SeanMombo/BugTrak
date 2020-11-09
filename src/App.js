@@ -30,7 +30,10 @@ import AdminPage from './pages/AdminPage.jsx'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
 import LoginPage from './pages/LoginPage'
+import MyProjects from './pages/MyProjectsPage'
+import MyTickets from './pages/MyTicketsPage'
 
+import BackButton from './components/BackButton'
 
 function PrivateRoute({ children, ...rest }) {
   const auth = useSelector(state => state.firebase.auth)
@@ -79,12 +82,8 @@ const rrfProps = {
 }
 
 
-
-
 // Setup react-redux so that connect HOC can be used
 function App() {
-
-
 
   useEffect(() => {
 
@@ -99,11 +98,10 @@ function App() {
         <Router>
         <ControlPanel/>
           
-          <Header/>
-          
           <div className='App'>
             <div className='appWrapper'>
-
+            <Header/>
+            <BackButton/>
               <Switch>
               
                 <Route path="/login">
@@ -122,7 +120,15 @@ function App() {
                 <PrivateRoute  path="/ticket/:ticketId">
                   <TicketPage />
                 </PrivateRoute>
-                
+
+                <PrivateRoute  path="/myprojects">
+                  <MyProjects />
+                </PrivateRoute>
+
+                <PrivateRoute  path="/mytickets">
+                  <MyTickets />
+                </PrivateRoute>
+
                 <PrivateRoute path="/">
                 </PrivateRoute>
               </Switch>
@@ -136,6 +142,3 @@ function App() {
 }
 
 export default App;
-
-
-

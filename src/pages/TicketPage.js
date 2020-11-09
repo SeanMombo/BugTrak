@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { actionTypes } from 'redux-firestore'
 import { useFirestoreConnect, isLoaded, populate } from 'react-redux-firebase'
 import { useParams } from 'react-router-dom';
-
+import {tableTypes} from '../constants.js'
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 
@@ -85,6 +85,7 @@ function TicketPage() {
 
     const dateStrings = ['dateEdited', 'dateCreated'];
 
+    ticket = {...ticket}
     if (ticket) {
         ticket.dateCreated = new Date(ticket.dateCreated.seconds * 1000 + ticket.dateCreated.nanoseconds/1000000);
         ticket.dateCreated = ticket.dateCreated.toISOString().split('T')[0];
@@ -96,65 +97,72 @@ function TicketPage() {
 
 
     return (
-        <div className="ticketPage">
-            <div className="topRow">
+        <div>
+            <Typography className='title' variant="h4" component="h1">Ticket Details</Typography> 
+            <br/><Divider/>
 
-                <Card className='ticketCard' elevation={3}>
-                    <CardHeader className='cardHeader' title='Details' titleTypographyProps={{variant:'h6', component:'h6'}}></CardHeader>
-                    
-                    <div className='cardContent' >
-                        <div className="cardLeft">
-                            
-                            <div className="attributeContainer">
-                                {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
-                                <Typography className='greyText2' variant='h5' component='h5' gutterBottom >{ticket.title}</Typography>
+            <div className="ticketPage">
+                
+
+                <div className="topRow">
+
+                    <Card className='ticketCard' elevation={3}>
+                        <CardHeader className='cardHeader' title='Details' titleTypographyProps={{variant:'h6', component:'h6'}}></CardHeader>
+                        
+                        <div className='cardContent' >
+                            <div className="cardLeft">
+                                
+                                <div className="attributeContainer">
+                                    {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
+                                    <Typography className='greyText2' variant='h5' component='h5' gutterBottom >{ticket.title}</Typography>
+                                </div>
+                                <br/>
+                                <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography>
+                                <Typography component='p' gutterBottom >{ticket.body}</Typography>
                             </div>
-                            <br/>
-                            <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography>
-                            <Typography component='p' gutterBottom >{ticket.body}</Typography>
-                        </div>
-                        <div> <Divider orientation="vertical"/></div>
-                        <div className="cardRight">
-                            <div className="attributeContainer">
-                                <Typography className='greyText'variant='caption' component='p' gutterBottom>Status</Typography>
-                                <Typography className='greyText2'  component='p' gutterBottom >{ticket.status}</Typography>
-                            </div>
-                            <div className="attributeContainer">
-                                <Typography className='greyText'variant='caption' component='p' gutterBottom>Priority</Typography>
-                                <Typography className='greyText2'  component='p' gutterBottom >{ticket.priority}</Typography>
-                            </div>
-                            <div className="attributeContainer">
-                                <Typography className='greyText'variant='caption' component='p' gutterBottom>Type</Typography>
-                                <Typography className='greyText2'  component='p' gutterBottom >{ticket.type}</Typography>
+                            <div> <Divider orientation="vertical"/></div>
+                            <div className="cardRight">
+                                <div className="attributeContainer">
+                                    <Typography className='greyText'variant='caption' component='p' gutterBottom>Status</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.status}</Typography>
+                                </div>
+                                <div className="attributeContainer">
+                                    <Typography className='greyText'variant='caption' component='p' gutterBottom>Priority</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.priority}</Typography>
+                                </div>
+                                <div className="attributeContainer">
+                                    <Typography className='greyText'variant='caption' component='p' gutterBottom>Type</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.type}</Typography>
+                                </div>
+
+                                <Divider/><br/>
+                                
+                                <div className="attributeContainer">
+                                    <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Created</Typography>
+                                    <Typography className='greyText2'component='p' gutterBottom >{`${ticket.dateCreated}`}</Typography>
+                                </div>
+                                <div className="attributeContainer">
+                                    <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Edited</Typography>
+                                    <Typography className='greyText2' component='p' gutterBottom >{`${ticket.dateEdited}`}</Typography>
+                                </div>
                             </div>
 
-                            <Divider/><br/>
-                            
-                            <div className="attributeContainer">
-                                <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Created</Typography>
-                                <Typography className='greyText2'component='p' gutterBottom >{`${ticket.dateCreated}`}</Typography>
-                            </div>
-                            <div className="attributeContainer">
-                                <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Edited</Typography>
-                                <Typography className='greyText2' component='p' gutterBottom >{`${ticket.dateEdited}`}</Typography>
-                            </div>
                         </div>
+                    </Card>
+                    <div className="dataTable">
+                        <DataTable data={history} key={history} tableProps={historyTicketTable} tableType={tableTypes.tickets}/>
 
                     </div>
-                </Card>
-                <div className="dataTable">
-                    <DataTable data={history} tableProps={historyTicketTable}/>
-
                 </div>
+
+                
+                <div className="bottomRow">
+                    <DataTable data={comments} key={comments} tableProps={commentsTicketTable} tableType={tableTypes.comments}/>         
+                </div>
+
+
+                
             </div>
-
-            
-            <div className="bottomRow">
-                <DataTable data={comments} tableProps={commentsTicketTable}/>         
-            </div>
-
-
-            
         </div>
     )
     

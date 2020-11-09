@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,7 +13,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 // import PieChartIcon from '@material-ui/icons/PieChart';
 import { Switch } from 'react-router';
-import { Link as RouterLink } from 'react-router-dom'; 
+import { Link as RouterLink, useLocation} from 'react-router-dom'; 
 import './control-panel.styles.scss'
 
 function ListItemLink(props) {
@@ -76,12 +76,35 @@ const useStyles = makeStyles((theme) => ({
 function ControlPanel() {
   const classes = useStyles();
 
-  // const params = useParams();
-  // let t = 0;
-  // console.log(params)
-  // if (params === 'manageprojects') t = 2;
-  // else if (params === 'project') t = 2
-  // else if (params === 'tickets') t = 4
+  let location = useLocation();
+
+  useEffect(
+    () => {
+      const pageType = location.pathname.split('/')[1];
+      
+      switch(location) {
+        case '/admin': 
+          setSelectedIndex(2);
+          break;
+
+        case '/myprojects': 
+          setSelectedIndex(3);
+          break;
+          
+        case '/mytickets': 
+          setSelectedIndex(4);
+          break;
+        
+         
+        default: 
+          setSelectedIndex(0);
+          break;
+      }
+      
+    },
+    [location]
+  )
+
 
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);

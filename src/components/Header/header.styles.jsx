@@ -8,11 +8,11 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   /* position:fixed; */
-  
+  z-index:-1;
   align-items: center;
   h1 {
-    font-size:40px;
-    margin:0;
+    font-size: 40px;
+    margin: 0;
     padding: 10px 15px;
   }
   /* @media screen and (max-width: 800px) {
