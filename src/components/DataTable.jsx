@@ -20,10 +20,10 @@ import Modal from '../components/Modal/Modal.jsx'
 import CreateProjectForm from '../components/CreateProjectForm.jsx'
 import { truncateString } from '../utils'
 import { Edit, } from '@material-ui/icons'
-import CircularProgress from '@material-ui/core/CircularProgress';
+// import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { useFirestore, useFirestoreConnect, isLoaded, isEmpty, } from 'react-redux-firebase'
-import { useSelector } from 'react-redux'
+import { useFirestore} from 'react-redux-firebase'
+// import { useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
 
 import { tableTypes } from '../constants'

@@ -57,51 +57,48 @@ function PrivateRoute({ children, ...rest }) {
 }
 
 
-// Create store with reducers and initial state
-const store = configureStore({
-  reducer,
-  initialState, 
-  devTools: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-})
+// // Create store with reducers and initial state
+// const store = configureStore({
+//   reducer,
+//   initialState, 
+//   devTools: window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+// })
 
 
-// react-redux-firebase config
-const rrfConfig = {
-    userProfile: 'users',
-    useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
-    allowMultipleListeners: true,
-}
+// // react-redux-firebase config
+// const rrfConfig = {
+//     userProfile: 'users',
+//     useFirestoreForProfile: true, // Firestore for Profile instead of Realtime DB
+//     allowMultipleListeners: true,
+// }
 
-const rrfProps = {
-  firebase,
-  enableLogging: true,
-  logErrors: true,
-  config: rrfConfig,
-  dispatch: store.dispatch,
-  createFirestoreInstance // <- needed if using firestore
-}
+// const rrfProps = {
+//   firebase,
+//   enableLogging: true,
+//   logErrors: true,
+//   config: rrfConfig,
+//   dispatch: store.dispatch,
+//   createFirestoreInstance // <- needed if using firestore
+// }
 
 
 // Setup react-redux so that connect HOC can be used
 function App() {
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    store.dispatch(fetchUsersStartAsync());
-  })
+  //   store.dispatch(fetchUsersStartAsync());
+  // })
 
   return (
-    <Provider store={store}>
-      <ReactReduxFirebaseProvider {...rrfProps}>
-      
-      {/* <Test/> */}
-        <Router>
+      <>
         <ControlPanel/>
           
           <div className='App'>
+          <Header/>
             <div className='appWrapper'>
-            <Header/>
-            <BackButton/>
+            
+            
               <Switch>
               
                 <Route path="/login">
@@ -134,10 +131,7 @@ function App() {
               </Switch>
             </div>
           </div>
-        </Router>
-        
-      </ReactReduxFirebaseProvider>
-    </Provider>
+      </>
   )
 }
 

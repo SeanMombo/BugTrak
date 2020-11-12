@@ -6,3 +6,10 @@ export const tableTypes = {
     mytickets: 4,
     comments: 5,
 }
+
+export const userTypes = {
+    admin: "admin",
+    developer: "dev",
+    submitter: "submitter",
+    project_manager: "pm",
+}

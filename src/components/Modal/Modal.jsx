@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
+// import Modal from '@material-ui/core/Modal';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+// import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from 'react-redux'
 import {toggleModal} from '../../redux/tableSlice'

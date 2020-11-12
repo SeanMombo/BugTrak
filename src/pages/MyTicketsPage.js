@@ -10,7 +10,7 @@ import './ManageProjectsPage.scss';
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import { tableTypes } from '../constants'
+import { tableTypes, userTypes } from '../constants'
 
 
 
@@ -18,6 +18,7 @@ function MyTickets() {
 
     const dispatch = useDispatch();
     const auth = useSelector(state => state.firebase.auth)
+    const profile = useSelector(state => state.firebase.profile)
     const users = useSelector(selectUsers) 
 
     const ticketQuery = {
@@ -45,7 +46,7 @@ function MyTickets() {
     
     
     // Show a message while loading
-    if (!isLoaded(tickets, users_projects, modalOpen, users)) {
+    if (!isLoaded(tickets, users_projects, modalOpen, users, profile, auth)) {
         return <CircularProgress/>
     }
 
@@ -66,7 +67,7 @@ function MyTickets() {
 
     const p = [];
     tickets.forEach(ticket => {
-        if (ticket['submitter'] === auth.uid || ticket['assignee'] === auth.uid) {
+        if (ticket['submitter'] === auth.uid || ticket['assignee'] === auth.uid || profile.userType === userTypes.admin) {
             const newTicket = {...ticket};
             newTicket['submitter'] = users[newTicket['submitter']];
             newTicket['assignee'] = users[newTicket['assignee']];

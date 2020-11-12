@@ -15,7 +15,8 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import { Switch } from 'react-router';
 import { Link as RouterLink, useLocation} from 'react-router-dom'; 
 import './control-panel.styles.scss'
-
+import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import { useSelector } from 'react-redux'
 function ListItemLink(props) {
   const { icon, primary, to, id, selectedIndex, handleListItemClick} = props;
   
@@ -77,6 +78,8 @@ function ControlPanel() {
   const classes = useStyles();
 
   let location = useLocation();
+  const firebase = useFirebase();
+  const profile = useSelector(state => state.firebase.profile)
 
   useEffect(
     () => {
@@ -113,14 +116,22 @@ function ControlPanel() {
     setSelectedIndex(index);
   };
 
-
+  
   return (
     // <Switch initialEntries={['/users']} initialIndex={0}
     <Switch > 
       <div className={classes.root}>
       
         <Paper className={`${classes.paper} controlPanel`} square elevation={3}>
-        <Typography className="bugTrackText" variant="h5" component="p">BugTrak</Typography>
+        {isLoaded(profile) && !isEmpty(profile) 
+          ? <div>
+              <Typography className="bugTrackText" variant="h5" component="p">Welcome, </Typography> 
+              <p className="bugTrackText2">{profile.displayName}</p> 
+
+            </div>
+          : <></>
+          }
+      
         <Divider/>
           <List aria-label="main mailbox folders">
             <ListItemLink className="bold" to="/" primary="Dashboard" icon={<InboxIcon className="bold"/>} id={0} selectedIndex={selectedIndex} handleListItemClick={handleListItemClick}/>

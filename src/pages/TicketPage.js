@@ -6,11 +6,10 @@ import { useParams } from 'react-router-dom';
 import {tableTypes} from '../constants.js'
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-
-
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider'
 
+import BackButton from '../components/BackButton'
 import DataTable from '../components/DataTable.jsx';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -99,8 +98,10 @@ function TicketPage() {
     return (
         <div>
             <Typography className='title' variant="h4" component="h1">Ticket Details</Typography> 
-            <br/><Divider/>
-
+            <br/>
+            <BackButton/>
+            <Divider/>
+            
             <div className="ticketPage">
                 
 

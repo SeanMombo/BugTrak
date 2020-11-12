@@ -10,7 +10,7 @@ import './ManageProjectsPage.scss';
 import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
-import { tableTypes } from '../constants'
+import { tableTypes, userTypes } from '../constants'
 
 
 
@@ -20,6 +20,7 @@ function MyProjects() {
 
     const dispatch = useDispatch();
     const auth = useSelector(state => state.firebase.auth)
+    const profile = useSelector(state => state.firebase.profile)
 
     const projectQuery = {
         collection: 'projects', 
@@ -46,7 +47,7 @@ function MyProjects() {
     
     
     // Show a message while loading
-    if (!isLoaded(projects, users_projects, modalOpen)) {
+    if (!isLoaded(projects, users_projects, modalOpen, auth, profile)) {
         return <CircularProgress/>
     }
 
@@ -59,15 +60,15 @@ function MyProjects() {
     const p = [];
     users_projects.forEach(proj => {
         
-        console.log(proj['collaborators'], proj['id'], projects[proj['id']], auth.uid)
-        if (proj['collaborators'].includes(auth.uid)) {
+        // console.log(proj['collaborators'], proj['id'], projects[proj['id']], auth.uid)
+        if (proj['collaborators'].includes(auth.uid) || profile.userType === userTypes.admin) {
             const newObj = {...projects[proj['id']]};
             newObj['id'] = proj['id'];
             p.push(newObj)
         }
     })
 
-    console.log(p);
+    // console.log(p);
 
     return (
         <div>
