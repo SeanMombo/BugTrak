@@ -17,6 +17,7 @@ import { Link as RouterLink, useLocation} from 'react-router-dom';
 import './control-panel.styles.scss'
 import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
 import { useSelector } from 'react-redux'
+
 function ListItemLink(props) {
   const { icon, primary, to, id, selectedIndex, handleListItemClick} = props;
   
@@ -78,14 +79,14 @@ function ControlPanel() {
   const classes = useStyles();
 
   let location = useLocation();
-  const firebase = useFirebase();
+  // const firebase = useFirebase();
   const profile = useSelector(state => state.firebase.profile)
 
   useEffect(
     () => {
       const pageType = location.pathname.split('/')[1];
       
-      switch(location) {
+      switch(pageType) {
         case '/admin': 
           setSelectedIndex(2);
           break;
@@ -124,10 +125,9 @@ function ControlPanel() {
       
         <Paper className={`${classes.paper} controlPanel`} square elevation={3}>
         {isLoaded(profile) && !isEmpty(profile) 
-          ? <div>
-              <Typography className="bugTrackText" variant="h5" component="p">Welcome, </Typography> 
-              <p className="bugTrackText2">{profile.displayName}</p> 
-
+          ? <div className="nameBox">
+              <Typography className="bugTrackText" variant="p" component="p">Welcome, </Typography> 
+              <Typography className="bugTrackText2" variant="h6" component="h6">{profile.displayName}</Typography> 
             </div>
           : <></>
           }

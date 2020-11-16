@@ -172,7 +172,8 @@ const EnhancedTableToolbar = (props) => {
       </Typography>
       
       { tableType === tableTypes.users_projects ? <AddUserDialogue users={users}/> 
-        :  tableType === tableTypes.projects ? <Modal><CreateProjectForm/></Modal> 
+        :  tableType === tableTypes.projects ? <Modal title="Create Project"><CreateProjectForm/></Modal> 
+
         : null
       }
       
@@ -422,7 +423,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
                   >
                   {buttonName}
                 </Button>
-                  <ConfirmationDialogue id={row.id} route={linkRoute} tableType={tableType}/>
+                  
                 </div>
               </TableCell> 
 

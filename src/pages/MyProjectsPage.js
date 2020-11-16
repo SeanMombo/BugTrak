@@ -32,7 +32,7 @@ function MyProjects() {
 
     useEffect(() => {
         return () => dispatch({ type: actionTypes.CLEAR_DATA })
-    },[])
+    },[dispatch])
 
     // Attach  listener
     useFirestoreConnect(() => [projectQuery, usersProjectsQuery])

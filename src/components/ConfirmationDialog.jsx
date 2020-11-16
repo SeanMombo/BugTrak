@@ -9,24 +9,25 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { useFirestore } from 'react-redux-firebase'
 import { Delete } from '@material-ui/icons'
 import ArchiveIcon from '@material-ui/icons/Archive';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import './ConfirmationDialogue.scss'
 import { tableTypes } from '../constants'
 
 export default function ConfirmationDialogue({id, route, visible, tableType}) {
     
-    switch(tableType) {
-        case tableTypes.projects: {
-            break;
-        }
-    }
+    // switch(tableType) {
+    //     case tableTypes.projects: {
+    //         break;
+    //     }
+    // }
 
     const [open, setOpen] = React.useState(visible);
     const params = useParams();
+    const location = useLocation();
     const urlId = Object.values(params)[0];
 
-    console.log(id, urlId, params);
+    console.log(id, urlId, params, location);
 
     const handleOpen = () => {
         setOpen(true);
@@ -40,16 +41,19 @@ export default function ConfirmationDialogue({id, route, visible, tableType}) {
 
     const handleAgree = () => {
         if(open) {
-            if(tableType === tableTypes.project) {
+            if(tableType === tableTypes.projects) {
+                
                 firestore.delete(`/projects/${id}`)    
+                firestore.delete(`/users_projects/${id}`)   
+                
             } 
             else if(tableType === tableTypes.users_projects) {
-                firestore.update(`users_projects/${urlId}`, {
+                firestore.update(`/users_projects/${urlId}`, {
                     collaborators: firestore.FieldValue.arrayRemove(`${id}`)
                 })
             } 
             else if(tableType === tableTypes.tickets) {
-                firestore.update(`tickets/${urlId}`, {
+                firestore.update(`/tickets/${id}`, {
                     status: 'resolved'
                 })
             }

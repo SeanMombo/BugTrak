@@ -31,7 +31,7 @@ function MyTickets() {
 
     useEffect(() => {
         return () => dispatch({ type: actionTypes.CLEAR_DATA })
-    },[])
+    },[dispatch])
 
     // Attach  listener
     useFirestoreConnect(() => [ticketQuery, usersProjectsQuery])

@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { toggleModal } from '../redux/tableSlice'
 import Typography from '@material-ui/core/Typography'
 import { useFirestore } from 'react-redux-firebase'
@@ -54,8 +54,8 @@ function CreateProjectForm() {
   
   const firestore = useFirestore();
   const dispatch = useDispatch();
-  const modalOpen = useSelector(state => state.tables.modalOpen);
-  const auth = useSelector(state => state.firestore.auth);
+  // const modalOpen = useSelector(state => state.tables.modalOpen);
+  // const auth = useSelector(state => state.firestore.auth);
 
   function handleClose(event) {
     dispatch(toggleModal(false))

@@ -23,7 +23,7 @@ function ManageProjects() {
 
     useEffect(() => {
         return () => dispatch({ type: actionTypes.CLEAR_DATA })
-    },[])
+    },[dispatch])
 
     // Attach  listener
     useFirestoreConnect(() => [projectQuery])

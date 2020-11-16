@@ -12,7 +12,7 @@ function ManageUsers() {
   const dispatch = useDispatch();
   useEffect(() => {
       return () => dispatch({ type: actionTypes.CLEAR_DATA })
-  },[])
+  },[dispatch])
   
   // Attach users listener
   useFirestoreConnect(() => [userQuery])

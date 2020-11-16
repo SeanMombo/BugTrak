@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { convertCollectionsSnapshotToMap, firebase, firestore } from '../firebase.utils';
+import { convertCollectionsSnapshotToMap, firestore } from '../firebase.utils';
 
 //Storing the shape of data for DataTable, as well as some other relevant variables. 
 //This allows me to use the same DataTable component, and allow it to support multiple data displays

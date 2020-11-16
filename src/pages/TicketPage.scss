@@ -85,6 +85,11 @@ $cutout-size: 1rem;
         background-color: #303030;
         color: white;
         border-radius:0px !important;
+        height:64px;
+        padding-left:16px;
+        padding-right:16px;
+        align-items:center;
+        display:flex;
     }
 
 
@@ -116,7 +121,7 @@ $cutout-size: 1rem;
     .attributeContainer {
         display: flex;
         /* flex-wrap: wrap; */
-        margin-bottom: 16px;
+        margin-bottom: 8px;
         word-break: break-word;
     }
 

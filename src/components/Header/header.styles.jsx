@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
 
 export const HeaderContainer = styled.div`
   height: 48px;

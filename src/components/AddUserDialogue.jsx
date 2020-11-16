@@ -12,6 +12,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useParams } from 'react-router-dom';
 
 import './ConfirmationDialogue.scss'
+
 export default function AddUserDialogue({ users, visible}) {
     const [open, setOpen] = React.useState(visible);
     const [value, setValue] = React.useState('');

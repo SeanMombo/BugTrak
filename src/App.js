@@ -1,20 +1,15 @@
-import React, { useEffect }  from 'react'
-import { Provider, useSelector, useDispatch } from 'react-redux'
-import reducer, { initialState } from './redux/reducers';
-import { configureStore } from '@reduxjs/toolkit'
+import React from 'react'
+import { useSelector} from 'react-redux'
+
 
 import 'firebase/auth'
 import 'firebase/firestore' // <- needed if using firestore
 import {
-  ReactReduxFirebaseProvider,
   isLoaded, isEmpty,
 } from 'react-redux-firebase'
 
-import { createFirestoreInstance } from 'redux-firestore' // <- needed if using firestore
-import firebase from './firebase.utils'
-import { fetchUsersStartAsync } from './redux/usersSlice'
+
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   Redirect,
@@ -33,7 +28,7 @@ import LoginPage from './pages/LoginPage'
 import MyProjects from './pages/MyProjectsPage'
 import MyTickets from './pages/MyTicketsPage'
 
-import BackButton from './components/BackButton'
+
 
 function PrivateRoute({ children, ...rest }) {
   const auth = useSelector(state => state.firebase.auth)

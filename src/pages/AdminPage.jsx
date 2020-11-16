@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
@@ -12,10 +12,10 @@ import {
 
   useRouteMatch
 } from "react-router-dom";
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import ManageProjectsPage from './ManageProjectsPage';
 import ManageUsersPage from './ManageUsersPage';
-import { fetchUsersStartAsync } from '../redux/usersSlice';
+
 
 import './AdminPage.scss'
 function AdminPage() {
@@ -163,7 +163,7 @@ function SimpleTabs() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const dispatch = useDispatch();
+
 
   return (
     <div className={classes.root}>

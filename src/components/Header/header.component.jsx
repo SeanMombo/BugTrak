@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux'
 import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
-import Typography from '@material-ui/core/Typography'
+
 import {
   HeaderContainer,
 

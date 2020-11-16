@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleModal(props) {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [modalStyle] = React.useState(getModalStyle);
+  // const [modalStyle] = React.useState(getModalStyle);
 
   // const [open, setOpen] = React.useState(false);
 
@@ -62,7 +62,7 @@ export default function SimpleModal(props) {
         onClick={handleOpen}
         className={classes.button}
         >
-        Create Project
+        {props.title}
       </Button>
 
       <Dialog

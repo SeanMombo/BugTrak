@@ -12,6 +12,8 @@ import DataTable from '../components/DataTable.jsx'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider'
+import BackButton from '../components/BackButton'
+
 
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -57,7 +59,7 @@ function ProjectPage() {
 
     useEffect(() => {
         return () => dispatch({ type: actionTypes.CLEAR_DATA })
-    },[])
+    },[dispatch])
 
     // Attach users listener
     useFirestoreConnect(() => [ ticketsQuery, projectsQuery, usersProjectsQuery ])
@@ -119,7 +121,8 @@ function ProjectPage() {
     return (
         <div>
             <Typography className='title' variant="h4" component="h1">Project Details</Typography>
-            <br/><Divider/>
+            <br/><BackButton/>
+            <Divider/>
             <div className='projectPage'>
                 <div className='projectPageTop'>
                     <Card className='card' elevation={3}>

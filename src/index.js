@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-import { Provider, useSelector, useDispatch } from 'react-redux'
+import { Provider} from 'react-redux'
 import reducer, { initialState } from './redux/reducers';
 import { configureStore } from '@reduxjs/toolkit'
 
@@ -11,7 +11,7 @@ import 'firebase/auth'
 import 'firebase/firestore' // <- needed if using firestore
 import {
   ReactReduxFirebaseProvider,
-  isLoaded, isEmpty,
+
 } from 'react-redux-firebase'
 
 import { createFirestoreInstance } from 'redux-firestore' // <- needed if using firestore
@@ -19,9 +19,6 @@ import firebase from './firebase.utils'
 import { fetchUsersStartAsync } from './redux/usersSlice'
 import {
   BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
 } from "react-router-dom";
 
 

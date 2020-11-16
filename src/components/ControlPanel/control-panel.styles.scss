@@ -53,14 +53,22 @@
     padding:8px;
     // padding-left:56px;
     text-align:center;
+    margin:0 !important;
 }
 .bugTrackText2 {
     padding:0px;
     // padding-left:56px;
-    margin-top:-12px;
+    margin:0 !important;
+    margin-top:-12px !important;
     text-align:center;
+    margin-bottom:2px !important;
+
 }
 
 .MuiListItemIcon-root {
     min-width: 40px !important;
+}
+
+.nameBox {
+    // height: 48px;
 }
