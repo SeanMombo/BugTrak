@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     height:'100%',
     width: 230,
-
+    zIndex:100,
     // paddingRight:16,
 
     position:'fixed',

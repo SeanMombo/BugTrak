@@ -5,6 +5,7 @@ export const tableTypes = {
     myprojects: 3,
     mytickets: 4,
     comments: 5,
+    history_tickets: 6,
 }
 
 export const userTypes = {
@@ -28,9 +29,13 @@ export const statuses = {
     resolved: "Resolved",
 }
 
+
+
+
 export const types = {
     bug: 'Bug',
     featureReq: 'Feature Request',
     docReq: 'Documentation Request',
-    other: 'Other'
+    other: 'Other',
+
 }

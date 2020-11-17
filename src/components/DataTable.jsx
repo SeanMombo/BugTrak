@@ -18,7 +18,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
 import Modal from '../components/Modal/Modal.jsx'
 import CreateProjectForm from '../components/CreateProjectForm.jsx'
-import { truncateString } from '../utils'
+import { truncateString, truncateDate } from '../utils'
 import { Edit, } from '@material-ui/icons'
 // import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -266,7 +266,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
   ///////////////////////////
   function createRows(data) {
     let rows = [];
-    const dateStrings = ['dateEdited', 'dateCreated'];
+    const dateStrings = ['dateEdited', 'dateCreated', 'dateEdited'];
     const userIdStrings = ['submitter', 'creator', 'assignee', 'userId'];
     data.forEach(obj => {
       let o = {...obj};
@@ -274,9 +274,14 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
       Object.keys(o).forEach(key => {
 
         if (dateStrings.includes(key)) {
-          let t;
+          let t, t2;
           t = new Date(o[key].seconds * 1000 + o[key].nanoseconds/1000000);
-          t = t.toISOString().split('T')[0];
+          t2 = t.toISOString().split('T');
+
+          let date = t2[0]
+          let time = t2[1].split(':'); 
+          time = time[0] + ':' + time[1];
+          t = date + ' ' + time;
           o[key] = t;
         } else if (userIdStrings.includes(key) && o[key]) { 
           o[key] = o[key].displayName;
@@ -381,8 +386,10 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
       >
 
         {headCells.map(head => {
-          
+          console.log('HEADH', head);
           let stringVal = truncateString(row[head.id], 100);
+          if (head.id=== 'dateEdited') stringVal = truncateDate(row[head.id]);
+
            return (head.id !== 'action') ? 
             <TableCell align="left" >{stringVal}</TableCell> 
 

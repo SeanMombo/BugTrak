@@ -9,6 +9,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { useFirestore } from 'react-redux-firebase'
 import { Delete } from '@material-ui/icons'
 import ArchiveIcon from '@material-ui/icons/Archive';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+
+
 import { useParams, useLocation } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
 import './ConfirmationDialogue.scss'
@@ -65,28 +68,40 @@ export default function ConfirmationDialogue({id, route, visible, tableType}) {
     return (
         <div>
             {
-                tableType === tableTypes.tickets ? <Button 
-                className="closeButton" 
-                onClick={handleOpen}  
-                variant="contained" 
-                color="secondary" 
-                size="small" 
-                startIcon={ <ArchiveIcon/> }
-                >
-                Archive
-            </Button> 
-            : 
-            <Button 
-                className="closeButton" 
-                onClick={handleOpen}  
-                variant="contained" 
-                color="secondary" 
-                size="small" 
-                startIcon={ <Delete/> }
-                >
+                tableType === tableTypes.tickets ? 
+                <Button     
+                    className="closeButton" 
+                    onClick={handleOpen}  
+                    variant="contained" 
+                    color="secondary" 
+                    size="small" 
+                    startIcon={ <ArchiveIcon/> }
+                    >
+                    Archive
+                </Button> 
+                : tableType === tableTypes.users_projects ? 
+                <Button     
+                    className="closeButton" 
+                    onClick={handleOpen}  
+                    variant="contained" 
+                    color="secondary" 
+                    size="small" 
+                    startIcon={ <RemoveCircleIcon/> }
+                    >
+                    Remove
+                </Button> 
+                : 
+                <Button 
+                    className="closeButton" 
+                    onClick={handleOpen}  
+                    variant="contained" 
+                    color="secondary" 
+                    size="small" 
+                    startIcon={ <Delete/> }
+                    >
 
-                Delete
-            </Button>
+                    Delete
+                </Button>
             }
             
             

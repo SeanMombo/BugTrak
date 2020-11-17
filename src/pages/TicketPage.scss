@@ -14,10 +14,10 @@ $cutout-size: 1rem;
     min-width:900px;
     /* height:50%; */
     white-space: normal;
-   
     display:flex;
     flex-direction:column;
-
+    height: 100%;
+    
     *,
     *::after {
       box-sizing: border-box;
@@ -74,7 +74,7 @@ $cutout-size: 1rem;
 
     .ticketCard {
         /* width:400px; */
-        min-width:700px;
+        min-width:760px;
         width:800px;
         margin:8px;
         border-top-right-radius: 0px !important;
@@ -121,15 +121,13 @@ $cutout-size: 1rem;
     .attributeContainer {
         display: flex;
         /* flex-wrap: wrap; */
-        margin-bottom: 8px;
+        // margin-bottom: 8px;
         word-break: break-word;
     }
-
 
     .indent {
         padding-left:16px;
     }
-
 
     .cardLeft {
         flex:7;

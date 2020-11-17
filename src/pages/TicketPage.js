@@ -33,7 +33,7 @@ function TicketPage() {
     },[dispatch])
 
     const ticketsQuery = {
-        collection: 'tickets',     
+        collection: 'tickets', 
     }
     const projectsQuety = {
         collection: 'projects',     
@@ -65,6 +65,9 @@ function TicketPage() {
     const projects = useSelector(
         ({ firestore: { ordered } }) => ordered.projects
     )
+    const projectsData = useSelector(
+        ({ firestore: { data } }) => data.projects
+    )
 
     const users = useSelector(selectUsers);
     
@@ -72,7 +75,7 @@ function TicketPage() {
     const commentsTicketTable = useSelector(selectTableCommentsTicket);
 
     // Show a message while loading
-    if (!isLoaded(ticket, comments, history, historyTicketTable, commentsTicketTable) ) {
+    if (!isLoaded(ticket, comments, history, historyTicketTable, commentsTicketTable, projects, projectsData) ) {
         return <CircularProgress/>
     }
 
@@ -90,13 +93,17 @@ function TicketPage() {
     // const dateStrings = ['dateEdited', 'dateCreated'];
     ticket = {...ticket}
     if (ticket) {
-        ticket.dateCreated = new Date(ticket.dateCreated.seconds * 1000 + ticket.dateCreated.nanoseconds/1000000);
+        ticket.dateCreated = new Date(ticket.dateCreated.seconds * 1000 + ticket.dateCreated.nanoseconds / 1000000);
         ticket.dateCreated = ticket.dateCreated.toISOString().split('T')[0];
        
-        ticket.dateEdited = new Date(ticket.dateEdited.seconds * 1000 + ticket.dateEdited.nanoseconds/1000000);
+        ticket.dateEdited = new Date(ticket.dateEdited.seconds * 1000 + ticket.dateEdited.nanoseconds / 1000000);
         ticket.dateEdited = ticket.dateEdited.toISOString().split('T')[0];
+
+        ticket.id = ticketId
     }
-  
+
+
+
     return (
         <div>
             <Typography className='title' variant="h4" component="h1">Ticket Details</Typography> 
@@ -119,16 +126,30 @@ function TicketPage() {
                         <div className='cardContent' >
                             <div className="cardLeft">
                                 
-                                <div className="attributeContainer">
+                              
                                     {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
+                                    {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Title</Typography> */}
+
+                                <div className="attributeContainer"> 
+                                    {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Title</Typography> */}
                                     <Typography className='greyText2' variant='h5' component='h5' gutterBottom >{ticket.title}</Typography>
                                 </div>
+                                
                                 <br/>
+                                
                                 <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography>
                                 <Typography component='p' gutterBottom >{ticket.body}</Typography>
+                                <br/>
+                                
                             </div>
                             <div> <Divider orientation="vertical"/></div>
                             <div className="cardRight">
+
+                            
+                                <div className="attributeContainer">
+                                    <Typography className='greyText' variant='caption' component='p' gutterBottom>Project</Typography>
+                                    <Typography className='greyText2' gutterBottom >{projectsData[ticket.projectId].title}</Typography>  
+                                </div>
                                 <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Assignee</Typography>
                                     <Typography className='greyText2'  component='p' gutterBottom >{assigneeName}</Typography>
@@ -137,7 +158,7 @@ function TicketPage() {
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Submitter</Typography>
                                     <Typography className='greyText2'  component='p' gutterBottom >{submitterName}</Typography>
                                 </div>
-
+                                <Divider/><br/>
                                 <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Status</Typography>
                                     <Typography className='greyText2'  component='p' gutterBottom >{ticket.status}</Typography>
@@ -166,8 +187,7 @@ function TicketPage() {
                         </div>
                     </Card>
                     <div className="dataTable">
-                        <DataTable data={history} key={history} tableProps={historyTicketTable} tableType={tableTypes.tickets}/>
-
+                        <DataTable data={history} key={history} tableProps={historyTicketTable} tableType={tableTypes.history_tickets}/>
                     </div>
                 </div>
 

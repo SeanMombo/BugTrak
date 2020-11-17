@@ -42,8 +42,8 @@ function EditTicketForm({ projects, ticket, users }) {
   // const { ticketId } = useParams();
   // const modalOpen = useSelector(state => state.tables.modalOpen);
   // const auth = useSelector(state => state.firestore.auth);
-
-
+  console.log('tick', ticket)
+  
   const classes = useStyles();
   const [state, setState] = React.useState({
     title: ticket.title,
@@ -72,6 +72,17 @@ function EditTicketForm({ projects, ticket, users }) {
   const [typeValue, setTypeValue] = React.useState(types[ticket.type]);
   const [typeInputValue, setTypeInputValue] = React.useState('');
 
+  const prevValues = {
+    title: ticket.title,
+    body: ticket.body,
+    projectId: ticket.projectId,
+    assignee: ticket.assignee,
+    priority: ticket.priority,
+    status: ticket.status,
+    type: ticket.type
+  }
+
+
   const handleChange = (event) => {
     const name = event.target.name;
     setState({
@@ -92,38 +103,55 @@ function EditTicketForm({ projects, ticket, users }) {
       return ;
     }
 
-    //create project collection
-    const newProj = { 
+    function getKeyByValue(object, value) {
+      return Object.keys(object).find(key => object[key] === value);
+    }
+
+    const newValues = {
       title: state.title,
       body: state.body,
-      dateCreated: firestore.Timestamp.fromDate(new Date()),
-    };
+      projectId: projectValue.id,
+      assignee: assigneeValue.id,
+      priority: getKeyByValue(priorities, priorityValue),
+      status: getKeyByValue(statuses, statusValue),
+      type: getKeyByValue(types, typeValue),
+    }
+
+    console.log("ay", prevValues, newValues)
+
+    
     let docRef;
     try {
-      docRef = await firestore.collection('projects').add(newProj);
-      console.log(docRef);
-      alert('Project successfully created!')
+      docRef = await firestore.update(`tickets/${ticket.id}`, newValues)
+    
       
-      //create users_projects collection
-      const newUsersProj = { 
-        collaborators: []
-      };
-      
-      try {
-        await firestore.collection('users_projects').doc(docRef.id).set(newUsersProj)
-        
-        alert('users_projects successfully created!')
-
-      } catch(error) {
-        alert(error.code, error.message)
-        dispatch(toggleModal(false))
-      }
-
       dispatch(toggleModal(false))
+      alert('Ticket successfully updated!')
 
     } catch(error) {
-      alert(error.code, error.message)
       dispatch(toggleModal(false))
+      alert(error.code, error.message)
+    }
+
+    try {
+      Object.keys(prevValues).forEach(key => {
+
+        let historyDoc = {
+          prevVal: prevValues[key],
+          val: newValues[key],
+          property: key,
+          ticketId: ticket.id,
+          dateEdited: firestore.Timestamp.fromDate(new Date()),
+        }
+  
+        if (prevValues[key] !== newValues[key]) {
+          firestore.collection('history_ticket').add(historyDoc)
+        }
+      })
+    } catch(error) {
+
+      dispatch(toggleModal(false))
+      alert(error.code, error.message)
     }
   }
 
@@ -360,7 +388,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       }}
                       disableClearable
                       autoComplete={true}
-                      id="PriorityAutoId"
+                      id="TypeAutoId"
                       options={Object.values(types)}
                       // getOptionLabel={(option) => option.displayName}
                       style={{ width: 300, marginTop: '16px' }}
@@ -381,7 +409,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       }}
                       disableClearable
                       autoComplete={true}
-                      id="PriorityAutoId"
+                      id="StatusAutoId"
                       options={Object.values(statuses)}
                       // getOptionLabel={(option) => option.displayName}
                       style={{ width: 300, marginTop: '16px' }}
