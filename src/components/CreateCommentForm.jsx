@@ -15,6 +15,7 @@ import './CreateProjectForm.scss'
 import { selectUsers } from '../redux/usersSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import {  isLoaded } from 'react-redux-firebase'
+import { toggleSnackbar } from '../redux/tableSlice';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -82,8 +83,9 @@ function CreateCommentForm({ ticket,}) {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (state.title === '' || state.body === '') {
-      alert('Cannot create ticket unless all form values are filled out');
+    if (state.body === '') {
+      // alert('Cannot create ticket unless all form values are filled out');
+      dispatch(toggleSnackbar([true, 'error', 'Cannot post an empty comment.']));
       return;
     }
 
@@ -95,18 +97,12 @@ function CreateCommentForm({ ticket,}) {
     }
 
     try {
-      let docRef;
-      docRef = await firestore.collection('comments_ticket').add(newTicket);
-      
-      dispatch(toggleCommentsModal(false))
-      alert('Ticket successfully created!')
-
+      await firestore.collection('comments_ticket').add(newTicket);
+      dispatch(toggleSnackbar([true, 'success', 'Comment posted!']));
     } catch(error) {
-      dispatch(toggleCommentsModal(false))
-      alert(error.code, error.message)
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
     }
-
-    
+    dispatch(toggleCommentsModal(false))
   }
 
   return (
@@ -127,8 +123,10 @@ function CreateCommentForm({ ticket,}) {
             inputProps={{
               name: 'body',
               id: 'project-body-field',
+              maxLength: 500
             }}
             variant="outlined"
+            style = {{width: 500,}}
           />
 
         

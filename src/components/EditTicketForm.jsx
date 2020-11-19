@@ -2,7 +2,7 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { useDispatch } from 'react-redux'
+
 import { toggleModal } from '../redux/tableSlice'
 import Typography from '@material-ui/core/Typography'
 import { useFirestore } from 'react-redux-firebase'
@@ -11,6 +11,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import './CreateProjectForm.scss'
 import { priorities, statuses, types } from '../constants'
 
+import { toggleSnackbar } from '../redux/tableSlice';
+import { useDispatch } from 'react-redux'
 const useStyles = makeStyles((theme) => ({
 
   formControl: {
@@ -42,7 +44,6 @@ function EditTicketForm({ projects, ticket, users }) {
   // const { ticketId } = useParams();
   // const modalOpen = useSelector(state => state.tables.modalOpen);
   // const auth = useSelector(state => state.firestore.auth);
-  console.log('tick', ticket)
   
   const classes = useStyles();
   const [state, setState] = React.useState({
@@ -99,7 +100,7 @@ function EditTicketForm({ projects, ticket, users }) {
     event.preventDefault();
 
     if (state.title === '' || state.body === '') {
-      alert('Cannot create a project with empty title or description');
+      dispatch(toggleSnackbar([true, 'error', 'Please fill out all fields.']));
       return ;
     }
 
@@ -120,17 +121,14 @@ function EditTicketForm({ projects, ticket, users }) {
     console.log("ay", prevValues, newValues)
 
     
-    let docRef;
-    try {
-      docRef = await firestore.update(`tickets/${ticket.id}`, newValues)
     
-      
-      dispatch(toggleModal(false))
-      alert('Ticket successfully updated!')
+    try {
+
+      await firestore.update(`tickets/${ticket.id}`, newValues)
+      dispatch(toggleSnackbar([true, 'success', 'Ticket successfully updated.']));
 
     } catch(error) {
-      dispatch(toggleModal(false))
-      alert(error.code, error.message)
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
     }
 
     try {
@@ -138,7 +136,7 @@ function EditTicketForm({ projects, ticket, users }) {
 
         let historyDoc = {
           prevVal: prevValues[key],
-          val: newValues[key],
+          val: key === 'assignee' ? users[newValues[key]].displayName : newValues[key],
           property: key,
           ticketId: ticket.id,
           dateEdited: firestore.Timestamp.fromDate(new Date()),
@@ -149,129 +147,11 @@ function EditTicketForm({ projects, ticket, users }) {
         }
       })
     } catch(error) {
-
-      dispatch(toggleModal(false))
-      alert(error.code, error.message)
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
     }
+
+    dispatch(toggleModal(false))
   }
-
-
-
-  function Autocompletes() {
-    return (
-    <div>
-      <div>
-        <Autocomplete
-            value={projectValue}
-            onChange={(event, newValue) => {
-                setProjectValue(newValue);
-            }}
-            inputValue={projectInputValue}
-            onInputChange={(event, newInputValue) => {
-                setProjectInputValue(newInputValue);
-            }}
-            disableClearable
-            autoComplete={true}
-            autoSelect={true}
-            autoHighlight={true}
-            id="projectAutoId"
-            options={projects}
-            getOptionLabel={(option) => option.title}
-            style={{ width: 300, marginTop: '8px' }}
-            renderInput={(params) => <TextField {...params} variant="outlined" label="Project"/>}
-            
-        />
-      </div>
-    
-      <div>
-      <Autocomplete
-          value={assigneeValue}
-          onChange={(event, newValue) => {
-              setAssigneeValue(newValue);
-          }}
-          inputValue={assigneeInputValue}
-          onInputChange={(event, newInputValue) => {
-              setAssigneeInputValue(newInputValue);
-          }}
-          disableClearable
-          autoComplete={true}
-          autoSelect={true}
-          autoHighlight={true}
-          id="assigneeAutoId"
-          options={Object.values(users)}
-          getOptionLabel={(option) => option.displayName}
-          style={{ width: 300, marginTop: '16px' }}
-          renderInput={(params) => <TextField {...params} variant="outlined" label="Assignee"/>}
-          
-      />
-    </div>
-   
-      <div>
-        <Autocomplete
-            value={priorityValue}
-            onChange={(event, newValue) => {
-              setPriorityValue(newValue);
-            }}
-            inputValue={priorityInputVale}
-            onInputChange={(event, newInputValue) => {
-              setPriorityInputValue(newInputValue);
-            }}
-            disableClearable
-            autoComplete={true}
-            id="PriorityAutoId"
-            options={Object.values(priorities)}
-            // getOptionLabel={(option) => option.displayName}
-            style={{ width: 300, marginTop: '16px' }}
-            renderInput={(params) => <TextField {...params} variant="outlined" label="Priority"/>}
-            
-        />
-      </div>
-   
-      <div>
-        <Autocomplete
-            value={typeValue}
-            onChange={(event, newValue) => {
-              setTypeValue(newValue);
-            }}
-            inputValue={typeInputValue}
-            onInputChange={(event, newInputValue) => {
-              setTypeInputValue(newInputValue);
-            }}
-            disableClearable
-            autoComplete={true}
-            id="PriorityAutoId"
-            options={Object.values(types)}
-            // getOptionLabel={(option) => option.displayName}
-            style={{ width: 300, marginTop: '16px' }}
-            renderInput={(params) => <TextField {...params} variant="outlined" label="Type" />}
-            
-        />
-      </div>
-   
-      <div>
-        <Autocomplete
-            value={statusValue}
-            onChange={(event, newValue) => {
-              setStatusValue(newValue);
-            }}
-            inputValue={statusInputVale}
-            onInputChange={(event, newInputValue) => {
-              setStatusInputValue(newInputValue);
-            }}
-            disableClearable
-            autoComplete={true}
-            id="PriorityAutoId"
-            options={Object.values(statuses)}
-            // getOptionLabel={(option) => option.displayName}
-            style={{ width: 300, marginTop: '16px' }}
-            renderInput={(params) => <TextField {...params} variant="outlined" label="Status" disableAnimation/>}
-            
-          />
-      </div>
-
-    </div>
-    )
-}
 
   return (
     <div className={classes.nativeSelects}>
@@ -323,6 +203,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       autoComplete={true}
                       autoSelect={true}
                       autoHighlight={true}
+                      openOnFocus={true}
                       id="projectAutoId"
                       options={projects}
                       getOptionLabel={(option) => option.title}
@@ -346,6 +227,7 @@ function EditTicketForm({ projects, ticket, users }) {
                     autoComplete={true}
                     autoSelect={true}
                     autoHighlight={true}
+                    openOnFocus={true}
                     id="assigneeAutoId"
                     options={Object.values(users)}
                     getOptionLabel={(option) => option.displayName}
@@ -367,6 +249,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       }}
                       disableClearable
                       autoComplete={true}
+                      openOnFocus={true}
                       id="PriorityAutoId"
                       options={Object.values(priorities)}
                       // getOptionLabel={(option) => option.displayName}
@@ -388,6 +271,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       }}
                       disableClearable
                       autoComplete={true}
+                      openOnFocus={true}
                       id="TypeAutoId"
                       options={Object.values(types)}
                       // getOptionLabel={(option) => option.displayName}
@@ -409,6 +293,7 @@ function EditTicketForm({ projects, ticket, users }) {
                       }}
                       disableClearable
                       autoComplete={true}
+                      openOnFocus={true}
                       id="StatusAutoId"
                       options={Object.values(statuses)}
                       // getOptionLabel={(option) => option.displayName}

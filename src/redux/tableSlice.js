@@ -78,8 +78,17 @@ export const tableSlice = createSlice({
               buttonName: '',
               linkRoute: ''
         },
+        snackbarOpen: false,
+        snackbarMessage: '',
+        // severity="error">
+        // severity="warning">
+        // severity="info">
+        // severity="success">
+        snackbarType: 'success',
+
         modalOpen: false,
         modalCommentsOpen: false,
+        
     },
     
     reducers: {
@@ -90,13 +99,19 @@ export const tableSlice = createSlice({
         toggleCommentsModal(state, action) {
             const bool = action.payload;
             state.modalCommentsOpen = bool;
-        }
+        },
+        toggleSnackbar(state, action) {
+            const [bool, type, message] = action.payload;
+            state.snackbarOpen = bool;
+            state.snackbarMessage = message;
+            state.snackbarType = type;
+        },
     }
 })
 
 
 //actions
-export const { toggleModal, toggleCommentsModal } = tableSlice.actions;
+export const { toggleModal, toggleCommentsModal, toggleSnackbar } = tableSlice.actions;
 
 //selectors
 export const selectTableProject = state => state.tables.projects;
@@ -105,6 +120,7 @@ export const selectTableTicketsProjects = state => state.tables.tickets_projects
 export const selectTableTickets = state => state.tables.tickets;
 export const selectTableHistoryTicket = state => state.tables.history_ticket;
 export const selectTableCommentsTicket = state => state.tables.comments_ticket;
+export const selectSnackbar = state => state.tables.snackbarOpen;
 export const initialState = tableSlice.initialState;
 
 //reducer

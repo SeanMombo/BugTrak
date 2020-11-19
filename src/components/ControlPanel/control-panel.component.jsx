@@ -15,7 +15,7 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import { Switch } from 'react-router';
 import { Link as RouterLink, useLocation} from 'react-router-dom'; 
 import './control-panel.styles.scss'
-import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
+import { isLoaded, isEmpty } from 'react-redux-firebase'
 import { useSelector } from 'react-redux'
 
 function ListItemLink(props) {

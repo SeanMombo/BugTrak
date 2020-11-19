@@ -26,6 +26,7 @@ import { truncateString, truncateDate } from '../utils'
 import { Edit, } from '@material-ui/icons'
 // import CircularProgress from '@material-ui/core/CircularProgress';
 
+// eslint-disable-next-line
 import { useFirestore} from 'react-redux-firebase'
 // import { useSelector } from 'react-redux'
 import { useHistory } from "react-router-dom";
@@ -163,7 +164,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { tableTitle, tableType, users } = props;
-  console.log(tableType)
+
   return (
     <Toolbar
       className={classes.root}
@@ -249,7 +250,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EnhancedTable({data, users, tableProps, isLoading, tableType}) {
+export default function EnhancedTable({data, users, tableProps,  tableType}) {
 
   let headCells, linkRoute, tableTitle, buttonName;
 
@@ -261,11 +262,12 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
 
   const classes = useStyles();
   let history = useHistory();
-  const firestore = useFirestore();
+  // const firestore = useFirestore();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
+  // eslint-disable-next-line
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -276,7 +278,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
     const userIdStrings = ['submitter', 'creator', 'assignee', 'userId'];
     data.forEach(obj => {
       let o = {...obj};
-
+      
       Object.keys(o).forEach(key => {
 
         if (dateStrings.includes(key)) {
@@ -290,8 +292,10 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
           t = date + ' ' + time;
           o[key] = t;
         } else if (userIdStrings.includes(key) && o[key]) { 
-          o[key] = o[key].displayName;
-        }
+            if (o[key] !== 'unassigned')
+              o[key] = o[key].displayName;
+         
+        }  
 
         return o[key]
       })
@@ -302,6 +306,7 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
     return rows;
   }
 
+  // eslint-disable-next-line
   const [rows, setRows] = React.useState(createRows(data));
   const [searchRows, setSearchRows] = React.useState(createRows(data));
   const [search, setSearch] = React.useState('');
@@ -320,14 +325,16 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
 
     str = str.toLowerCase();
     let columns = rows[0] && Object.keys(rows[0]);
-    console.log(columns)
+    
     columns = Object.values(headCells).map(val => val.id)
-    console.log(columns)
+    
 
     columns = columns.filter(el => !rejectedCols.includes(el))
     return rows.filter(row => 
       columns.some(
         col => { 
+          if(row[col] === undefined) 
+          console.log(row, col)
           return row[col].toString().toLowerCase().indexOf(str) > -1 }))
     
   }
@@ -370,12 +377,12 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
   const DisplayRow = ({row, buttonName, tableType}) => {
     return (
       <TableRow
-        hover
+        
         key={row.title}
       >
 
         {headCells.map(head => {
-          console.log('HEADH', head);
+          // console.log('HEADH', head);
           let stringVal = truncateString(row[head.id], 100);
           if (head.id=== 'dateEdited') stringVal = truncateDate(row[head.id]);
 

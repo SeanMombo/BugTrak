@@ -7,17 +7,17 @@ import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleModal, toggleCommentsModal} from '../../redux/tableSlice'
 
-function getModalStyle() {
-  const top = 10;
-  const left = 50;
+// function getModalStyle() {
+//   const top = 10;
+//   const left = 50;
 
-  return {
+//   return {
 
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${left}%, -${top}%)`,
-  };
-}
+//     top: `${top}%`,
+//     left: `${left}%`,
+//     transform: `translate(-${left}%, -${top}%)`,
+//   };
+// }
 
 const useStyles = makeStyles((theme) => ({
   paper: {

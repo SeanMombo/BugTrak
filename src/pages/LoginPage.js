@@ -15,7 +15,7 @@ function LoginPage () {
   const auth = useSelector(state => state.firebase.auth)
 
   function loginWithGoogle() {
-    return firebase.login({ provider: 'google', type: 'popup' })
+    return firebase.login({ provider: 'google', type: 'redirect' })
   }
 
   return (
@@ -26,7 +26,7 @@ function LoginPage () {
           !isLoaded(auth)
           ? <span>Loading...</span>
           : isEmpty(auth)
-            // <GoogleButton/> button can be used instead
+            // <GoogleButton/>
             ? <button onClick={loginWithGoogle}>Login With Google</button>
             : <Redirect
             to={{

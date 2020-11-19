@@ -117,7 +117,9 @@ $cutout-size: 1rem;
         
         /* padding-left:16px; */
     }
-
+    .titleText {
+        font-weight:800;
+    }
     .attributeContainer {
         display: flex;
         /* flex-wrap: wrap; */
@@ -132,6 +134,7 @@ $cutout-size: 1rem;
     .cardLeft {
         flex:7;
         padding:8px;
+        padding-right:16px;
         // border-right: 2px lightgrey dotted;
         overflow-y: auto;
     }

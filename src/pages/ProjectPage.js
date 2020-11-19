@@ -108,8 +108,13 @@ function ProjectPage() {
 
         ticketsInProject = Object.keys(ticketsInProject).map(key => {
             const newObj = {...tickets[key]};
-            newObj['assignee'] = users[newObj['assignee']];
-            newObj['submitter'] = users[newObj['submitter']];
+
+            if (newObj['assignee'] !== 'unassigned')
+                newObj['assignee'] = users[newObj['assignee']];
+            
+
+            if (newObj['submitter'] !== 'unassigned')
+                newObj['submitter'] = users[newObj['submitter']];
             newObj['id'] = key;
             return newObj;
         }) 

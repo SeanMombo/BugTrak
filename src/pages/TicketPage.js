@@ -128,7 +128,7 @@ function TicketPage() {
                             <BackButton/>
                         </CardHeader> */}
                         <Paper square elevation={1} className='cardHeader'>
-                            <Typography className='greyText2' variant='h6' component='h6'>Details</Typography>
+                            <Typography className='greyText2' variant='h6' component='h6'>Ticket</Typography>
                             <Modal title="Edit Ticket"><EditTicketForm projects={projects} ticket={ticket} users={users}/></Modal>
                         </Paper>
 
@@ -139,11 +139,9 @@ function TicketPage() {
                                     {/* <Typography className='greyText'variant='caption' component='p' gutterBottom>Title</Typography> */}
                                     {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Title</Typography> */}
 
-                                <div className="attributeContainer"> 
-                                    {/* <Typography className='greyText' variant='caption' component='p' gutterBottom>Title</Typography> */}
-                                    <Typography className='greyText2' variant='h5' component='h5' gutterBottom >{ticket.title}</Typography>
-                                </div>
-                                
+                       
+                                <Typography className='titleText' variant='h5' component='h5' gutterBottom >{ticket.title}</Typography>
+
                                 <br/>
                                 
                                 <Typography className='greyText' variant='caption' component='p' gutterBottom>Description</Typography>

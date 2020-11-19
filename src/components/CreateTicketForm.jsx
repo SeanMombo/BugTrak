@@ -14,8 +14,8 @@ import './CreateProjectForm.scss'
 import { priorities, statuses, types } from '../constants'
 import { selectUsers } from '../redux/usersSlice'
 import { useSelector, useDispatch } from 'react-redux'
-import { useFirestoreConnect, isLoaded, populate } from 'react-redux-firebase'
-
+import { isLoaded } from 'react-redux-firebase'
+import { toggleSnackbar } from '../redux/tableSlice';
 const useStyles = makeStyles((theme) => ({
 
   formControl: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function CreateTicketForm({ ticket,}) {
+function CreateTicketForm() {
   const firestore = useFirestore();
   const dispatch = useDispatch();
   const { projectId } = useParams();
@@ -56,21 +56,10 @@ function CreateTicketForm({ ticket,}) {
   });
 
 
-  //project autocomplete
-  const [projectValue, setProjectValue] = React.useState('');
-  const [projectInputValue, setProjectInputValue] = React.useState('');
-
-  //assignee autocomplete
-  const [assigneeValue, setAssigneeValue] = React.useState('');
-  const [assigneeInputValue, setAssigneeInputValue] = React.useState('');
 
   //priority autocomplete
   const [priorityValue, setPriorityValue] = React.useState('');
   const [priorityInputVale, setPriorityInputValue] = React.useState('');
-
-  //status autocomplete
-  const [statusValue, setStatusValue] = React.useState('');
-  const [statusInputVale, setStatusInputValue] = React.useState('');
 
   //type autocomplete
   const [typeValue, setTypeValue] = React.useState('');
@@ -105,7 +94,8 @@ function CreateTicketForm({ ticket,}) {
 
 
     if (priorityValue === '' || typeValue === '' || state.title === '' || state.body === '') {  
-      alert('Cannot create ticket unless all form values are filled out');
+      dispatch(toggleSnackbar([true, 'error', 'Please fill out all fields.']));
+
       return;
     }
 
@@ -117,30 +107,23 @@ function CreateTicketForm({ ticket,}) {
       title: state.title,
       body: state.body,
       projectId: projectId,
-      assignee: '',
-      submitter: auth.uid ? auth.uid : '',
+      assignee: 'unassigned',
+      submitter: auth.uid ? auth.uid : 'unassigned',
       priority: getKeyByValue(priorities, priorityValue),
       status: getKeyByValue(statuses, 'New'),
       type: getKeyByValue(types, typeValue),
       dateCreated: firestore.Timestamp.fromDate(new Date()),
     }
 
-   
-
-
+ 
     try {
-      let docRef;
-      docRef = await firestore.collection('tickets').add(newTicket);
-      
-      dispatch(toggleModal(false))
-      alert('Ticket successfully created!')
+      await firestore.collection('tickets').add(newTicket);
+      dispatch(toggleSnackbar([true, 'success', 'Ticket successfully created!']));
 
     } catch(error) {
-      dispatch(toggleModal(false))
-      alert(error.code, error.message)
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
     }
-
-    
+    dispatch(toggleModal(false))
   }
 
 
@@ -194,6 +177,7 @@ function CreateTicketForm({ ticket,}) {
                       }}
                       disableClearable
                       autoComplete={true}
+                      openOnFocus={true}
                       id="PriorityAutoId"
                       options={Object.values(priorities)}
                       // getOptionLabel={(option) => option.displayName}
@@ -215,6 +199,7 @@ function CreateTicketForm({ ticket,}) {
                       }}
                       disableClearable
                       autoComplete={true}
+                      openOnFocus={true}
                       id="TypeAutoId"
                       options={Object.values(types)}
                       // getOptionLabel={(option) => option.displayName}
