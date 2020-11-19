@@ -69,8 +69,8 @@ export const tableSlice = createSlice({
         history_ticket: {
             headers: [
                 { id: 'property', numeric: false, label: 'Property' },  
-                { id: 'val', numeric: false, label: 'Current Value' },
                 { id: 'prevVal', numeric: false, label: 'Previous Value' },
+                { id: 'val', numeric: false, label: 'Current Value' },
                 { id: 'dateEdited', numeric: false, label: 'Date Changed' },
                 // { id: 'action', numeric: true, label: '' },  
               ],
@@ -79,19 +79,24 @@ export const tableSlice = createSlice({
               linkRoute: ''
         },
         modalOpen: false,
+        modalCommentsOpen: false,
     },
     
     reducers: {
         toggleModal(state, action) {
             const bool = action.payload;
             state.modalOpen = bool;
+        },
+        toggleCommentsModal(state, action) {
+            const bool = action.payload;
+            state.modalCommentsOpen = bool;
         }
     }
 })
 
 
 //actions
-export const { toggleModal } = tableSlice.actions;
+export const { toggleModal, toggleCommentsModal } = tableSlice.actions;
 
 //selectors
 export const selectTableProject = state => state.tables.projects;

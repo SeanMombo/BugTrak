@@ -297,7 +297,7 @@ function EditTicketForm({ projects, ticket, users }) {
             className={`search ${classes.formControl}`}
             multiline
             placeholder="Ticket Description" 
-            label="Body"
+            label="Description"
             value={state.body}
             onChange={handleChange}
             inputProps={{

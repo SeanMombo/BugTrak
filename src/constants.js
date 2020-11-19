@@ -4,7 +4,7 @@ export const tableTypes = {
     tickets: 2,
     myprojects: 3,
     mytickets: 4,
-    comments: 5,
+    comments_tickets: 5,
     history_tickets: 6,
 }
 
@@ -28,9 +28,6 @@ export const statuses = {
     active: "Active",
     resolved: "Resolved",
 }
-
-
-
 
 export const types = {
     bug: 'Bug',

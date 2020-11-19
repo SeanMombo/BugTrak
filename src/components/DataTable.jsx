@@ -18,6 +18,10 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField'
 import Modal from '../components/Modal/Modal.jsx'
 import CreateProjectForm from '../components/CreateProjectForm.jsx'
+import CreateTicketForm from '../components/CreateTicketForm.jsx'
+import CreateCommentForm from '../components/CreateCommentForm.jsx'
+
+
 import { truncateString, truncateDate } from '../utils'
 import { Edit, } from '@material-ui/icons'
 // import CircularProgress from '@material-ui/core/CircularProgress';
@@ -173,6 +177,8 @@ const EnhancedTableToolbar = (props) => {
       
       { tableType === tableTypes.users_projects ? <AddUserDialogue users={users}/> 
         :  tableType === tableTypes.projects ? <Modal title="Create Project"><CreateProjectForm/></Modal> 
+        :  tableType === tableTypes.tickets ?  <Modal title="Create Ticket"><CreateTicketForm/></Modal>
+        :  tableType === tableTypes.comments_ticket ?  <Modal title="New Comment"><CreateCommentForm/></Modal>
 
         : null
       }
@@ -191,7 +197,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     // width: '100%',
     margin:8,
-    
+    whiteSpace: 'nowrap',
   },
   headerBottom: {
     marginBottom: '1px solid black'
@@ -304,23 +310,6 @@ export default function EnhancedTable({data, users, tableProps, isLoading, table
     setSearch(event.target.value);
     setSearchRows(searchData(rows, event.target.value))
   };
-
-
-  /////////////////////////
-  // const usersQuery = {
-  //   collection: 'users', 
-  // }
-
-  // // Attach users listener
-  // useFirestoreConnect(() => [usersQuery])
-
-  // const users = useSelector(
-  //     ({ firestore: { ordered } }) => ordered.users 
-  // )
-
-  // if (!isLoaded(users)) return <CircularProgress/>
-
-  /////////////////////////
 
 
 

@@ -65,6 +65,7 @@ function TicketPage() {
     const projects = useSelector(
         ({ firestore: { ordered } }) => ordered.projects
     )
+
     const projectsData = useSelector(
         ({ firestore: { data } }) => data.projects
     )
@@ -85,8 +86,17 @@ function TicketPage() {
         comments = [];
 
     // //convert assignee and submitter IDs into user displayName's,
-    const assigneeName = users[ticket.assignee].displayName;
-    const submitterName = users[ticket.submitter].displayName;
+    
+    let assigneeName = 'unassigned';
+    let submitterName = 'unassigned';
+
+    if (ticket.assignee !== 'unassigned') {
+        assigneeName = users[ticket.assignee].displayName;
+    }
+    if (ticket.submitter !== 'unassigned') {
+        submitterName = users[ticket.submitter].displayName;
+    }
+
 
     console.log(ticket, 'TICKEEEEEET');
 
@@ -96,12 +106,11 @@ function TicketPage() {
         ticket.dateCreated = new Date(ticket.dateCreated.seconds * 1000 + ticket.dateCreated.nanoseconds / 1000000);
         ticket.dateCreated = ticket.dateCreated.toISOString().split('T')[0];
        
-        ticket.dateEdited = new Date(ticket.dateEdited.seconds * 1000 + ticket.dateEdited.nanoseconds / 1000000);
-        ticket.dateEdited = ticket.dateEdited.toISOString().split('T')[0];
+        // ticket.dateEdited = new Date(ticket.dateEdited.seconds * 1000 + ticket.dateEdited.nanoseconds / 1000000);
+        // ticket.dateEdited = ticket.dateEdited.toISOString().split('T')[0];
 
         ticket.id = ticketId
     }
-
 
 
     return (
@@ -178,10 +187,10 @@ function TicketPage() {
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Created</Typography>
                                     <Typography className='greyText2'component='p' gutterBottom >{`${ticket.dateCreated}`}</Typography>
                                 </div>
-                                <div className="attributeContainer">
+                                {/* <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Date Edited</Typography>
                                     <Typography className='greyText2' component='p' gutterBottom >{`${ticket.dateEdited}`}</Typography>
-                                </div>
+                                </div> */}
                             </div>
 
                         </div>

@@ -5,7 +5,7 @@ import Dialog from '@material-ui/core/Dialog';
 // import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import { useSelector, useDispatch } from 'react-redux'
-import {toggleModal} from '../../redux/tableSlice'
+import { toggleModal, toggleCommentsModal} from '../../redux/tableSlice'
 
 function getModalStyle() {
   const top = 10;
@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   button: {
     // backgroundColor: theme.palette.primary.light,
     // border: '1px lightgrey solid',
+    width:'100%',
   }
 }));
 
@@ -43,15 +44,25 @@ export default function SimpleModal(props) {
 
   // const [open, setOpen] = React.useState(false);
 
+
+  let open = useSelector(state => state.tables.modalOpen);
+  let openComments = useSelector(state => state.tables.modalCommentsOpen);
+  let toggleFunction = toggleModal;
+  if (props.title === 'New Comment') {
+    toggleFunction = toggleCommentsModal;
+    open = openComments;
+  }
+
   const handleOpen = () => {
-    dispatch(toggleModal(true))
+    dispatch(toggleFunction(true))
   };
 
   const handleClose = () => {
-    dispatch(toggleModal(false))
+    dispatch(toggleFunction(false))
   };
 
-  const open = useSelector(state => state.tables.modalOpen);
+  
+
 
   return (
     <div>
