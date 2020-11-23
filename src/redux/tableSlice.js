@@ -28,6 +28,17 @@ export const tableSlice = createSlice({
               buttonName: '',
               linkRoute: '/users_projects/'
         },
+        users_table: {
+            headers: [
+                { id: 'displayName', numeric: false, label: 'Name' },
+                { id: 'email', numeric: false, label: 'Email' },
+                { id: 'userType', numeric: false, label: 'Role' },
+
+              ],
+              tableTitle: 'All Users',
+              buttonName: '',
+              linkRoute: '/users_table/'
+        },
         tickets_projects: {
             headers: [
                 { id: 'title', numeric: false, label: 'Title' },
@@ -116,6 +127,7 @@ export const { toggleModal, toggleCommentsModal, toggleSnackbar } = tableSlice.a
 //selectors
 export const selectTableProject = state => state.tables.projects;
 export const selectTableUsersProjects = state => state.tables.users_projects;
+export const selectTableUsersTable = state => state.tables.users_table;
 export const selectTableTicketsProjects = state => state.tables.tickets_projects;
 export const selectTableTickets = state => state.tables.tickets;
 export const selectTableHistoryTicket = state => state.tables.history_ticket;

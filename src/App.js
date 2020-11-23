@@ -51,13 +51,15 @@ function PrivateRoute({ children, ...rest }) {
 
 // Setup react-redux so that connect HOC can be used
 function App() {
+  const auth = useSelector(state => state.firebase.auth);
+  const noUser = isLoaded(auth) && isEmpty(auth);
 
   return (
       <>
         <ControlPanel/>
           
-          <div className='App'>
-          <Header/>
+          <div className={noUser ? 'AppNoUser' : 'App'}>
+            <Header/>
             <div className='appWrapper'>
             
             
@@ -69,7 +71,6 @@ function App() {
 
                 <PrivateRoute  path="/admin">
                   <AdminPage />
-
                 </PrivateRoute>
 
                 <PrivateRoute  path="/project/:projectId">

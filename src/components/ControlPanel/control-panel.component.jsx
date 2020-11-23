@@ -99,7 +99,6 @@ function ControlPanel() {
           setSelectedIndex(4);
           break;
         
-         
         default: 
           setSelectedIndex(0);
           break;
@@ -109,8 +108,6 @@ function ControlPanel() {
     [location]
   )
 
-
-
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleListItemClick = (event, index) => {
@@ -118,6 +115,8 @@ function ControlPanel() {
   };
 
   
+  if (isLoaded(profile) && isEmpty(profile)) return(<div></div>);
+
   return (
     // <Switch initialEntries={['/users']} initialIndex={0}
     <Switch > 

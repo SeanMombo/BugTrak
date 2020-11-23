@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -271,6 +271,11 @@ export default function EnhancedTable({data, users, tableProps, tableType}) {
   // eslint-disable-next-line
   const [dense, setDense] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  useEffect(() => {
+    setRows(createRows(data));
+    setSearchRows(createRows(data));
+  }, [data])
 
   ///////////////////////////
   function createRows(data) {

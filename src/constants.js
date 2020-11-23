@@ -6,16 +6,19 @@ export const tableTypes = {
     mytickets: 4,
     comments_tickets: 5,
     history_tickets: 6,
+    users_table: 7,
 }
 
 export const userTypes = {
-    admin: "admin",
-    developer: "dev",
-    submitter: "submitter",
-    project_manager: "pm",
+    'None': 'none',
+    "Admin": 'admin',
+    "Developer": 'dev',
+    "Submitter": 'submitter',
+    "Project Manager": 'pm',
 }
 
 export const userConversion = {
+    none: 'None',
     admin: "Admin",
     dev: "Developer",
     submitter: "Submitter",

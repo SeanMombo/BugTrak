@@ -1,0 +1,53 @@
+.manageUsersPage{
+    width:80%;
+    margin: 0 auto;
+    padding:32px;
+    height:100%;
+    display: flex;
+    align-content: space-between;
+    justify-content: space-between;
+
+    .leftSide {
+        flex: 0 0 20%;
+        min-width: 332px;
+        padding-top:0px;
+        padding-bottom:0px;
+        margin:8px;
+        border-top-right-radius: 0px !important;
+        border-top-left-radius: 0px !important;
+    }
+    .rightSide {
+        flex: 1;
+        padding:32px;
+        padding-top:0px;
+        padding-bottom:0px;
+    }
+    .greyText2 {
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+        width: 65%;
+        box-sizing: border-box;
+        
+        /* padding-left:16px; */
+    }
+    .cardHeader {
+        background-color: #303030;
+        color: white;
+        border-radius:0px !important;
+        height:64px;
+        padding-left:16px;
+        padding-right:16px;
+        align-items:center;
+        display:flex;
+    }
+    .cardContent {
+        display:flex;
+        flex-direction:row;
+        justify-content: space-between;
+        white-space: normal;
+        padding:16px;
+
+        // border-bottom: 2px lightgrey dotted;
+    }
+
+}

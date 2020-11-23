@@ -2,20 +2,17 @@ import React from 'react'
 // import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
 import { useFirebase, isLoaded, isEmpty } from 'react-redux-firebase'
-
 import { isMobile } from 'react-device-detect';
-
 // import GoogleButton from 'react-google-button' // optional
 import {
-
   Redirect,
-
 } from "react-router-dom";
-
+import Paper from '@material-ui/core/Paper'
+import './LoginPage.scss'
 
 function LoginPage () {
-  const firebase = useFirebase()
-  const auth = useSelector(state => state.firebase.auth)
+  const firebase = useFirebase();
+  const auth = useSelector(state => state.firebase.auth);
 
 
   function loginWithGoogle() {
@@ -26,7 +23,7 @@ function LoginPage () {
   }
 
   return (
-    <div >
+    <Paper className='loginPage'>
       <div>
         <h2>Auth</h2>
         {
@@ -43,7 +40,7 @@ function LoginPage () {
           />
         }
       </div>
-    </div>
+    </Paper>
   )
 }
 

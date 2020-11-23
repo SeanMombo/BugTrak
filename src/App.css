@@ -18,6 +18,10 @@ body {
     
     /* display:flex; */
 }
+.AppNoUser {
+   height:calc(100vh - 88px);
+
+}
 
 .appWrapper {
      /* width: 80%;  */
