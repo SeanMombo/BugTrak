@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { toggleModal } from '../redux/tableSlice'
 import Typography from '@material-ui/core/Typography'
 import { useFirestore } from 'react-redux-firebase'
+import { toggleSnackbar } from '../redux/tableSlice';
 
 
 import './CreateProjectForm.scss'
@@ -65,7 +66,7 @@ function CreateProjectForm() {
     event.preventDefault();
 
     if (state.title === '' || state.body === '') {
-      alert('Cannot create a project with empty title or description');
+      dispatch(toggleSnackbar([true, 'error', 'Please fill out all fields.']));
       return ;
     }
 
@@ -75,11 +76,10 @@ function CreateProjectForm() {
       body: state.body,
       dateCreated: firestore.Timestamp.fromDate(new Date()),
     };
-    let docRef;
+
     try {
-      docRef = await firestore.collection('projects').add(newProj);
-      console.log(docRef);
-      alert('Project successfully created!')
+      let docRef = await firestore.collection('projects').add(newProj);
+      dispatch(toggleSnackbar([true, 'success', 'Project successfully created!']));
       
       //create users_projects collection
       const newUsersProj = { 
@@ -88,23 +88,19 @@ function CreateProjectForm() {
       
       try {
         await firestore.collection('users_projects').doc(docRef.id).set(newUsersProj)
-        
-        alert('users_projects successfully created!')
 
       } catch(error) {
-        alert(error.code, error.message)
-        dispatch(toggleModal(false))
+        firestore.delete(`/projects/${docRef.id}`) 
+        dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+        
       }
 
-      dispatch(toggleModal(false))
-
     } catch(error) {
-      alert(error.code, error.message)
-      dispatch(toggleModal(false))
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
     }
 
     
-
+dispatch(toggleModal(false))
   }
 
   

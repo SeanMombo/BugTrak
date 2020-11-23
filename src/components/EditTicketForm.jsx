@@ -133,9 +133,16 @@ function EditTicketForm({ projects, ticket, users }) {
 
     try {
       Object.keys(prevValues).forEach(key => {
+        // console.log('NEW VALS', prevValues[key], newValues[key])
+        // debugger;
+
+        //Format values to send to the history_ticket collection
+        let prev = prevValues[key];
+        if (key === 'assignee')
+          prev = prev === 'unassigned' ? 'unassigned' : users[prevValues[key]].displayName;
 
         let historyDoc = {
-          prevVal: prevValues[key],
+          prevVal: key === 'assignee' ? prev : prevValues[key], 
           val: key === 'assignee' ? users[newValues[key]].displayName : newValues[key],
           property: key,
           ticketId: ticket.id,

@@ -122,7 +122,7 @@ function ProjectPage() {
         ticketsInProject = []
     }
     
-    console.log(users, ticketsInProject, usersInProject)
+    // console.log(users, ticketsInProject, usersInProject)
     return (
         <div>
             <Typography className='title' variant="h4" component="h1">Project Details</Typography>

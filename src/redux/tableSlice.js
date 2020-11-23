@@ -31,7 +31,7 @@ export const tableSlice = createSlice({
         tickets_projects: {
             headers: [
                 { id: 'title', numeric: false, label: 'Title' },
-                { id: 'assignee', numeric: false, label: 'Developer' },
+                { id: 'assignee', numeric: false, label: 'Assignee' },
                 { id: 'status', numeric: false, label: 'Status' },
                 { id: 'priority', numeric: false, label: 'Priority' },
                 // { id: 'dateCreated', numeric: false, label: 'Date Created' },

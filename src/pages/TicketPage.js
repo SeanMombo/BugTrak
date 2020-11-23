@@ -17,6 +17,7 @@ import EditTicketForm from '../components/EditTicketForm'
 
 import { selectTableHistoryTicket, selectTableCommentsTicket } from '../redux/tableSlice';
 import { selectUsers } from '../redux/usersSlice'
+import { statuses, priorities, types, } from '../constants';
 import './TicketPage.scss';
 
 
@@ -168,15 +169,15 @@ function TicketPage() {
                                 <Divider/><br/>
                                 <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Status</Typography>
-                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.status}</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{statuses[ticket.status]}</Typography>
                                 </div>
                                 <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Priority</Typography>
-                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.priority}</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{priorities[ticket.priority]}</Typography>
                                 </div>
                                 <div className="attributeContainer">
                                     <Typography className='greyText'variant='caption' component='p' gutterBottom>Type</Typography>
-                                    <Typography className='greyText2'  component='p' gutterBottom >{ticket.type}</Typography>
+                                    <Typography className='greyText2'  component='p' gutterBottom >{types[ticket.type]}</Typography>
                                 </div>
 
                                 <Divider/><br/>

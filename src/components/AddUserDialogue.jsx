@@ -10,18 +10,20 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux'
 
+import { toggleSnackbar } from '../redux/tableSlice';
 import './ConfirmationDialogue.scss'
 
-export default function AddUserDialogue({ users, visible}) {
+export default function AddUserDialogue({ users, visible }) {
     const [open, setOpen] = React.useState(visible);
     const [value, setValue] = React.useState('');
     const [inputValue, setInputValue] = React.useState('');
 
     const { projectId } = useParams();
- 
+    const dispatch = useDispatch();
     const firestore = useFirestore();
-    console.log(users)
+
     const handleOpen = () => {
         setOpen(true);
     };  
@@ -30,10 +32,17 @@ export default function AddUserDialogue({ users, visible}) {
         setOpen(false);
     };  
     const handleAgree = () => {
-        firestore.update(`users_projects/${projectId}`, {
-            collaborators: firestore.FieldValue.arrayUnion(`${value.id}`)
-        })
-        setOpen(false);
+
+        if (value !== '') {
+            firestore.update(`users_projects/${projectId}`, {
+                collaborators: firestore.FieldValue.arrayUnion(`${value.id}`)
+            })
+            setOpen(false);
+        } else {
+            dispatch(toggleSnackbar([true, 'error', 'No user selected.']));
+
+        }
+        
     }; 
 
   

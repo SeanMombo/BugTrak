@@ -11,11 +11,15 @@ import { Delete } from '@material-ui/icons'
 import ArchiveIcon from '@material-ui/icons/Archive';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
+import { useDispatch } from 'react-redux'
 
 import { useParams, useLocation } from 'react-router-dom';
 import Alert from '@material-ui/lab/Alert';
-import './ConfirmationDialogue.scss'
 import { tableTypes } from '../constants'
+import { toggleSnackbar } from '../redux/tableSlice';
+
+import './ConfirmationDialogue.scss'
+
 
 export default function ConfirmationDialogue({id, route, visible, tableType}) {
     
@@ -29,6 +33,7 @@ export default function ConfirmationDialogue({id, route, visible, tableType}) {
     const params = useParams();
     const location = useLocation();
     const urlId = Object.values(params)[0];
+    const dispatch = useDispatch();
 
     console.log(id, urlId, params, location);
 
@@ -48,23 +53,27 @@ export default function ConfirmationDialogue({id, route, visible, tableType}) {
                 
                 firestore.delete(`/projects/${id}`)    
                 firestore.delete(`/users_projects/${id}`)   
+                dispatch(toggleSnackbar([true, 'success', 'Project succesfully deleted']));
                 
             } 
             else if(tableType === tableTypes.users_projects) {
                 firestore.update(`/users_projects/${urlId}`, {
                     collaborators: firestore.FieldValue.arrayRemove(`${id}`)
                 })
+                dispatch(toggleSnackbar([true, 'success', 'User removed from project team.']));
+
             } 
             else if(tableType === tableTypes.tickets) {
                 firestore.update(`/tickets/${id}`, {
                     status: 'resolved'
                 })
+                dispatch(toggleSnackbar([true, 'success', 'Ticket has been archived.']));
+
             }
         }   
     };
 
 
-  
     return (
         <div>
             {

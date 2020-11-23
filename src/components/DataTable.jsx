@@ -32,6 +32,7 @@ import { useFirestore} from 'react-redux-firebase'
 import { useHistory } from "react-router-dom";
 
 import { tableTypes } from '../constants'
+import { statuses, priorities, types, userConversion } from '../constants';
 
 
 import ConfirmationDialogue from './ConfirmationDialog'
@@ -250,7 +251,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function EnhancedTable({data, users, tableProps,  tableType}) {
+export default function EnhancedTable({data, users, tableProps, tableType}) {
 
   let headCells, linkRoute, tableTitle, buttonName;
 
@@ -333,8 +334,8 @@ export default function EnhancedTable({data, users, tableProps,  tableType}) {
     return rows.filter(row => 
       columns.some(
         col => { 
-          if(row[col] === undefined) 
-          console.log(row, col)
+          // if(row[col] === undefined) 
+          // console.log(row, col)
           return row[col].toString().toLowerCase().indexOf(str) > -1 }))
     
   }
@@ -382,9 +383,16 @@ export default function EnhancedTable({data, users, tableProps,  tableType}) {
       >
 
         {headCells.map(head => {
-          // console.log('HEADH', head);
+
           let stringVal = truncateString(row[head.id], 100);
           if (head.id=== 'dateEdited') stringVal = truncateDate(row[head.id]);
+          if (head.id=== 'dateCreated') stringVal = truncateDate(row[head.id]);
+          if (head.id=== 'status') stringVal = statuses[stringVal]; 
+          if (head.id=== 'priority') stringVal = priorities[stringVal]; 
+          if (head.id=== 'type') stringVal = types[stringVal]; 
+          if (head.id=== 'userType') stringVal = userConversion[stringVal]; 
+
+
 
            return (head.id !== 'action') ? 
             <TableCell align="left" >{stringVal}</TableCell> 

@@ -15,6 +15,13 @@ export const userTypes = {
     project_manager: "pm",
 }
 
+export const userConversion = {
+    admin: "Admin",
+    dev: "Developer",
+    submitter: "Submitter",
+    pm: "Project Manager",
+}
+
 export const priorities = {
     none: "None",
     low: "Low",
