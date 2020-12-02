@@ -147,6 +147,7 @@ function ManageUsers() {
                   id="controllable-states-demo"
                   options={users}
                   getOptionLabel={(option) => option.displayName}
+
                   style={{ width: 300 }}
                   renderInput={(params) => <TextField {...params} label="Users" variant="outlined"/>}
               />

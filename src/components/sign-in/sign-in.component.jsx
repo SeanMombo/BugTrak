@@ -7,6 +7,8 @@ import FormInput from '../form-input/form-input.component'
 import Button from '@material-ui/core/Button';
 import GoogleButton from 'react-google-button'
 // import { googleSignInStart, emailSignInStart } from '../../redux/user/user.actions';
+import { toggleSnackbar } from '../../redux/tableSlice';
+import { useDispatch } from 'react-redux'
 
 import {
   SignInContainer,
@@ -18,7 +20,7 @@ const SignIn = () => {
   const [userCredentials, setCredentials] = useState({email: '', password: ''});
   const { email, password } = userCredentials;
   const firebase = useFirebase();
-
+  const dispatch = useDispatch();
 
   function loginWithGoogle() {
     if(isMobile)
@@ -31,7 +33,11 @@ const SignIn = () => {
   const handleSubmit = async event => {
     event.preventDefault();
     // emailSignInStart(email, password);
-    firebase.login({ email: email, password: password})
+    firebase.login({ email: email, password: password}).catch((error) => {
+      dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+    })
+
+  
   };
 
   const handleChange = event => {

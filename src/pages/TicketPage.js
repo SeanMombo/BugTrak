@@ -206,7 +206,6 @@ function TicketPage() {
             </div>
         </div>
     )
-    
 
 }
 

@@ -15,11 +15,23 @@ export const HeaderContainer = styled.div`
     margin: 0;
     padding: 10px 15px;
   }
+  &.container {
+      width:800px;
+
+    }
   p {
     padding: 10px 16px;
-    min-width:200px;
     display:inline !important;
+    min-width:500px;
+  
+    &.role {
+      min-width:300px;
+    }
 
+    &.guest {
+      min-width:500px;
+
+    }
     b {
       display:inline !important;
     }

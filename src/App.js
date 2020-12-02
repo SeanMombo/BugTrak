@@ -19,6 +19,7 @@ import './App.css'
 import ControlPanel from './components/ControlPanel/control-panel.component'
 import Header from './components/Header/header.component'
 
+import HomePage from './pages/HomePage.js'
 import AdminPage from './pages/AdminPage.jsx'
 import ProjectPage from './pages/ProjectPage'
 import TicketPage from './pages/TicketPage'
@@ -52,6 +53,7 @@ function PrivateRoute({ children, ...rest }) {
 // Setup react-redux so that connect HOC can be used
 function App() {
   const auth = useSelector(state => state.firebase.auth);
+  const profile = useSelector(state => state.firebase.profile);
   const noUser = isLoaded(auth) && isEmpty(auth);
 
   return (
@@ -90,11 +92,13 @@ function App() {
                 </PrivateRoute>
 
                 <PrivateRoute path="/">
+                  <HomePage/>
                 </PrivateRoute>
               </Switch>
             </div>
           </div>
           <Snackbar/>
+          
       </>
   )
 }

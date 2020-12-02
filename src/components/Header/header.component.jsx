@@ -21,15 +21,17 @@ const Header = () => {
 
     <HeaderContainer square elevation={1}>
           {isLoaded(auth, profile) && !isEmpty(auth, profile) ? (
-           
-              <p>
+     
+              <p className='role'>
                 Your Role: <b>{profile.userType.toUpperCase()}</b>
+              
               </p>
-          
+              
+       
           ) : (
             <></>
           )}
-
+        
         <OptionsContainer>
           {/* <OptionLink to='/shop'>SHOP</OptionLink>
           <OptionLink to='/shop'></OptionLink> */}
@@ -43,8 +45,9 @@ const Header = () => {
           )}
         
         </OptionsContainer>
-            
+         
     </HeaderContainer>
+    
     {/* <Divider/> */}
   </HeaderContainerWrapper>
 )};

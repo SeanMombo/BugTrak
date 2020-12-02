@@ -10,7 +10,7 @@ import './ManageProjectsPage.scss';
 import Paper from '@material-ui/core/Paper'
 import Divider from '@material-ui/core/Divider'
 import Typography from '@material-ui/core/Typography'
-import { tableTypes, userTypes } from '../constants'
+import { tableTypes, userTypes, userConversion } from '../constants'
 
 
 
@@ -61,7 +61,7 @@ function MyProjects() {
     users_projects.forEach(proj => {
         
         // console.log(proj['collaborators'], proj['id'], projects[proj['id']], auth.uid)
-        if (proj['collaborators'].includes(auth.uid) || profile.userType === userTypes.admin) {
+        if (proj['collaborators'].includes(auth.uid) || profile.userType === userTypes[userConversion.admin]) {
             const newObj = {...projects[proj['id']]};
             newObj['id'] = proj['id'];
             p.push(newObj)

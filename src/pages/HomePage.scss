@@ -1,4 +1,4 @@
-.manageProjectsPage {
+.HomePage {
     width:80%;
     margin: 0 auto;
     padding:32px;
@@ -8,8 +8,20 @@
     background-color: transparent !important;
     
     .innerWrapper {
-        display:flex;
-        flex-direction: row;
+        position: relative;
+        height: 100%;
+        width: 100%;
+      
+        .innerWrapper div {
+            height: 50%;
+            width: 50%;
+            float: left;
+            position: relative;
+        }
+    }
+    .col {
+        padding:0px;
+        
     }
     .modalWrapper {
         margin:8px;

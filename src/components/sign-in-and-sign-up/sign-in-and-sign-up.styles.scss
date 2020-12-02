@@ -4,3 +4,25 @@
     justify-content: space-between;
     margin: 30px auto;
 }
+
+.demo-accounts {
+    width: 850px;
+    
+    // display: flex;
+    // justify-content: space-between;
+    margin: 30px auto;
+    position:relative;
+    .demo-box {
+       
+
+        display:flex;
+        flex-direction: row;
+        justify-content: center;
+        align-content:center;
+
+     
+        top: 50%;                         /* 3 */
+        transform: translate(0, 25%)
+    }
+
+}

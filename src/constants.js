@@ -10,6 +10,7 @@ export const tableTypes = {
 }
 
 export const userTypes = {
+    'Guest': 'guest',
     'None': 'none',
     "Admin": 'admin',
     "Developer": 'dev',
@@ -18,6 +19,7 @@ export const userTypes = {
 }
 
 export const userConversion = {
+    guest: 'Guest',
     none: 'None',
     admin: "Admin",
     dev: "Developer",

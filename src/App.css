@@ -33,3 +33,8 @@ body {
     white-space: nowrap;
     margin:auto auto;
 }
+
+.dashboardWrapper {
+    display: flex;
+    flex-direction: row;
+}

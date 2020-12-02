@@ -56,6 +56,7 @@ export const tableSlice = createSlice({
         tickets: {
             headers: [
                 { id: 'title', numeric: false, label: 'Title' },
+                { id: 'projectId', numeric: false, label: 'Project' },
                 { id: 'assignee', numeric: false, label: 'Developer' },
                 { id: 'status', numeric: false, label: 'Status' },
                 { id: 'priority', numeric: false, label: 'Priority' },

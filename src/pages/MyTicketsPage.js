@@ -10,7 +10,7 @@ import './ManageProjectsPage.scss';
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import Divider from '@material-ui/core/Divider'
-import { tableTypes, userTypes } from '../constants'
+import { tableTypes, userTypes, userConversion } from '../constants'
 
 
 
@@ -22,8 +22,10 @@ function MyTickets() {
     const users = useSelector(selectUsers) 
 
     const ticketQuery = {
-        collection: 'tickets', 
-        
+        collection: 'tickets',  
+    }
+    const projectsQuery = {
+        collection: 'projects',  
     }
     const usersProjectsQuery = {
         collection: 'users_projects', 
@@ -34,19 +36,20 @@ function MyTickets() {
     },[dispatch])
 
     // Attach  listener
-    useFirestoreConnect(() => [ticketQuery, usersProjectsQuery])
+    useFirestoreConnect(() => [ticketQuery, usersProjectsQuery, projectsQuery])
 
  
     // Get from redux state
     let tickets = useSelector(({ firestore: { ordered } }) => ordered.tickets);
     let users_projects = useSelector(({ firestore: { ordered } }) => ordered.users_projects);
+    let projects = useSelector(({ firestore: { data } }) => data.projects);
 
     const ticketTableData = useSelector(selectTableTickets)
     const modalOpen = useSelector(state => state.tables.modalOpen)
     
     
     // Show a message while loading
-    if (!isLoaded(tickets, users_projects, modalOpen, users, profile, auth)) {
+    if (!isLoaded(tickets, projects, users_projects, modalOpen, users, profile, auth)) {
         return <CircularProgress/>
     }
 
@@ -67,11 +70,25 @@ function MyTickets() {
 
     const p = [];
     tickets.forEach(ticket => {
-        if (ticket['submitter'] === auth.uid || ticket['assignee'] === auth.uid || profile.userType === userTypes.admin) {
+        // If project manager, find if ticket is part of project PM is assigned to manage
+        var pmOwnership = false;
+        users_projects.forEach(proj => {
+            if (proj['collaborators'].includes(auth.uid) && proj['id'] === ticket['projectId']) {
+                pmOwnership = true;
+            }
+        });
+
+        //Show different tickets depending on account type
+        if (ticket['submitter'] === auth.uid 
+        || ticket['assignee'] === auth.uid 
+        || profile.userType === userTypes[userConversion.admin]
+        || (profile.userType === userTypes[userConversion.pm] && pmOwnership)) {
+            
             const newTicket = {...ticket};
             newTicket['submitter'] = users[newTicket['submitter']];
             newTicket['assignee'] = users[newTicket['assignee']];
-            
+
+            newTicket['projectId'] = projects[newTicket['projectId']].title ? projects[newTicket['projectId']].title : newTicket['projectId'];
             p.push(newTicket)
         }
     })
