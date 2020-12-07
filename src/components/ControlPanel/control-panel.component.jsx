@@ -82,31 +82,31 @@ function ControlPanel() {
   // const firebase = useFirebase();
   const profile = useSelector(state => state.firebase.profile)
 
-  useEffect(
-    () => {
-      const pageType = location.pathname.split('/')[1];
+  // useEffect(
+  //   () => {
+  //     const pageType = location.pathname.split('/')[1];
       
-      switch(pageType) {
-        case '/admin': 
-          setSelectedIndex(2);
-          break;
+  //     switch(pageType) {
+  //       case '/admin': 
+  //         setSelectedIndex(2);
+  //         break;
 
-        case '/myprojects': 
-          setSelectedIndex(3);
-          break;
+  //       case '/myprojects': 
+  //         setSelectedIndex(3);
+  //         break;
           
-        case '/mytickets': 
-          setSelectedIndex(4);
-          break;
+  //       case '/mytickets': 
+  //         setSelectedIndex(4);
+  //         break;
         
-        default: 
-          setSelectedIndex(0);
-          break;
-      }
+  //       default: 
+  //         setSelectedIndex(0);
+  //         break;
+  //     }
       
-    },
-    [location]
-  )
+  //   },
+  //   [location]
+  // )
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
 

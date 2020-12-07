@@ -112,13 +112,13 @@ function EditTicketForm({ projects, ticket, users }) {
       title: state.title,
       body: state.body,
       projectId: projectValue.id,
-      assignee: assigneeValue.id,
+      assignee: assigneeValue !== undefined ? assigneeValue.id : 'unassigned',
       priority: getKeyByValue(priorities, priorityValue),
       status: getKeyByValue(statuses, statusValue),
       type: getKeyByValue(types, typeValue),
     }
 
-    console.log("ay", prevValues, newValues)
+    console.log("ay", assigneeValue, prevValues, newValues)
 
     
     
@@ -138,12 +138,17 @@ function EditTicketForm({ projects, ticket, users }) {
 
         //Format values to send to the history_ticket collection
         let prev = prevValues[key];
-        if (key === 'assignee')
+        let cur = newValues[key];
+        if (key === 'assignee') {
           prev = prev === 'unassigned' ? 'unassigned' : users[prevValues[key]].displayName;
+          cur = cur === 'unassigned' ? 'unassigned' : users[newValues[key]].displayName;
+        }
+
+
 
         let historyDoc = {
           prevVal: key === 'assignee' ? prev : prevValues[key], 
-          val: key === 'assignee' ? users[newValues[key]].displayName : newValues[key],
+          val: key === 'assignee' ? cur : newValues[key], //users[newValues[key]].displayName : newValues[key],
           property: key,
           ticketId: ticket.id,
           dateEdited: firestore.Timestamp.fromDate(new Date()),

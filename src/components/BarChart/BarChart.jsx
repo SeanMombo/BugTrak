@@ -6,14 +6,14 @@ import Paper from '@material-ui/core/Paper'
 const styles = {
     fontFamily: "sans-serif",
     textAlign: "center",
-    height: '50%',
-    width: '50%',
-    float: 'left',
-    position: 'relative',
-
+    padding:'20px',
 
   };
-  
+  const stylesH1 = {
+    marginTop:0,
+    
+  };
+
   // const data = [
   //   { quarter: 1, earnings: 13000 },
   //   { quarter: 2, earnings: 16500 },
@@ -22,21 +22,40 @@ const styles = {
   // ];
   
   const BarChart = ({ type, data }) => {
+    let title = '';
+
+
+
 
     let keys;
+    let colors
     if (type === 0) {
       keys = ["none", "low", 'med', 'high']
+      title = 'Tickets By Priority'
+      colors = { 'none': '#e91e63', 'low': '#2196f3', 'med': '#4caf50', high: '#ffc107'}
+
     } else if (type === 1) {
       keys = ["bug", "featureReq", 'docReq', 'other']
+      title = 'Tickets By Type'
+      colors = { 'bug': '#e91e63', 'featureReq': '#2196f3', 'docReq': '#4caf50', other: '#ffc107'}
+
+    } else if (type === 2) {
+      keys = ["new", "open", 'active', 'resolved']
+      title = 'Tickets By Status'
+      colors = { 'new': '#e91e63', 'open': '#2196f3', 'active': '#4caf50', resolved: '#ffc107'}
     }
+
+    
+    const getColor = bar => colors[bar.id]
 
 
     return (
-      <Paper style={styles}>
-        <h1>Nivo basic demo</h1>
-        <div style={{ height: "250px", padding:16}}>
+      <Paper style={styles} elevation={3}>
+        <h1 style={stylesH1}>{title}</h1>
+        <div style={{ height: "250px"}}>
           <ResponsiveBar 
           data={data} 
+          colors={getColor}
           keys={keys} 
           indexBy="index" 
           tooltip={({ id, value}) => (

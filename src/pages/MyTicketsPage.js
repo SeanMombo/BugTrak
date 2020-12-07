@@ -68,7 +68,7 @@ function MyTickets() {
     //     }
     // })
 
-    const p = [];
+    const userTickets = [];
     tickets.forEach(ticket => {
         // If project manager, find if ticket is part of project PM is assigned to manage
         var pmOwnership = false;
@@ -89,7 +89,7 @@ function MyTickets() {
             newTicket['assignee'] = users[newTicket['assignee']];
 
             newTicket['projectId'] = projects[newTicket['projectId']].title ? projects[newTicket['projectId']].title : newTicket['projectId'];
-            p.push(newTicket)
+            userTickets.push(newTicket)
         }
     })
 
@@ -108,7 +108,7 @@ function MyTickets() {
                 </div> */}
                 <div className="innerWrapper">
                     <div className="dataTableWrapper"> 
-                        <DataTable key={p} data={p} tableProps={ticketTableData} tableType={tableTypes.mytickets}/>
+                        <DataTable key={userTickets} data={userTickets} tableProps={ticketTableData} tableType={tableTypes.mytickets}/>
                     </div>
                 </div>
 

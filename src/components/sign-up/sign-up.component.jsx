@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, connect } from 'react-redux'
 import { useFirebase, useFirestore } from 'react-redux-firebase'
 import FormInput from '../form-input/form-input.component';
 // import CustomButton from '../custom-button/custom-button.component';
@@ -43,7 +43,7 @@ const SignUp = () => {
       displayName: displayName,
       userType: userTypes[userConversion.submitter],
       dateCreated: firestore.Timestamp.fromDate(new Date()),
-
+      guest: true,
     };
 
     try {
@@ -119,3 +119,5 @@ const SignUp = () => {
 
 // export default connect(null, mapDispatchToProps)(SignUp);
 export default SignUp;
+
+

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -23,38 +24,34 @@ function AdminPage() {
     // relative to the parent route, while the `url` lets
     // us build relative links.
     let { path } = useRouteMatch();
+    const profile = useSelector(state => state.firebase.profile)
   
     return (
       <div>
-          <Typography variant="h4" component="h1">Administrator Panel</Typography>
-
-        <SimpleTabs/> 
-        {/* <div className='tabs'>
-          <li>
-            <Link to={`${url}/projects`}>Projects</Link>
-          </li>
-          <li>
-            <Link to={`${url}/users`}>Users</Link>
-          </li>
-
-        </div> */}
-  
-        <Switch>
-
-          <Route path={`${path}/projects`}>
-            <ManageProjectsPage/>
-          </Route>
-          <Route path={`${path}/users`}>
-            <ManageUsersPage/>
-          </Route>
-        </Switch>
+        {
+          profile.userType === 'admin' ? 
+            <>
+            <Typography variant="h4" component="h1">Administrator Panel</Typography>
+              <SimpleTabs/> 
+              <Switch>
+                <Route path={`${path}/projects`}>
+                  <ManageProjectsPage/>
+                </Route>
+                <Route path={`${path}/users`}>
+                  <ManageUsersPage/>
+                </Route>
+              </Switch> 
+            </>
+          : 
+            <h1>You must be an admin to view this page.</h1>
+        }
+        
       </div>
     );
   }
 
 export default AdminPage
   
-
 
 const AntTabs = withStyles({
     root: {
