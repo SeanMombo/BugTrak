@@ -2,6 +2,8 @@ import React from "react";
 import { priorities } from '../../constants'
 import { ResponsiveBar } from "@nivo/bar";
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
 const styles = {
     fontFamily: "sans-serif",
@@ -10,22 +12,19 @@ const styles = {
 
   };
   const stylesH1 = {
-    marginTop:0,
+    marginTop:16,
     
   };
 
   // const data = [
   //   { quarter: 1, earnings: 13000 },
-  //   { quarter: 2, earnings: 16500 },
+  //   { quarter: 2, earnings: 16500 },  
   //   { quarter: 3, earnings: 14250 },
   //   { quarter: 4, earnings: 19000 }
   // ];
   
   const BarChart = ({ type, data }) => {
     let title = '';
-
-
-
 
     let keys;
     let colors
@@ -51,7 +50,6 @@ const styles = {
 
     return (
       <Paper style={styles} elevation={3}>
-        <h1 style={stylesH1}>{title}</h1>
         <div style={{ height: "250px"}}>
           <ResponsiveBar 
           data={data} 
@@ -65,6 +63,9 @@ const styles = {
         )}
           />
         </div>
+        <Divider/>
+        <Typography variant="h5" component="p" style={stylesH1}>{title}</Typography>
+
       </Paper>
     );
 }

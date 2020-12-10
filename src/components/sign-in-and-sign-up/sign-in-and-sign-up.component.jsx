@@ -53,7 +53,8 @@ function TabPanel(props) {
   
   const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
+      // flexGrow: 1,
+      minWidth:1000,
       backgroundColor: theme.palette.background.paper,
     },
     appbar: {
@@ -113,7 +114,7 @@ function TabPanel(props) {
         <AppBar position="static" className={classes.appbar}>
           <Tabs value={value} onChange={handleChange} aria-label="simple tabs example" centered>
             <Tab label="SignIn/SignUp" {...a11yProps(0)} />
-            <Tab label="Guest Accounts" {...a11yProps(1)} />
+            {/* <Tab label="Guest Account" {...a11yProps(1)} /> */}
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
@@ -128,10 +129,10 @@ function TabPanel(props) {
                 color="primary"
                 style={{width:220, height:50, borderRadius:0, backgroundColor:'black', marginBottom:50}}
                 > 
-                    ADMINISTRATOR
+                    Guest Admin
                 </Button>
             </div>
-            <div className='demo-box'>
+            {/* <div className='demo-box'>
                 <Button 
                 onClick={handleGuestLogin4}
                 variant="contained"
@@ -160,7 +161,7 @@ function TabPanel(props) {
                 > 
                     SUBMITTER
                 </Button>
-            </div>
+            </div> */}
         </div>
         </TabPanel>
 

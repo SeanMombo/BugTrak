@@ -47,27 +47,42 @@ export default function ConfirmationDialogue({id, route, visible, tableType}) {
 
     const firestore = useFirestore();
 
-    const handleAgree = () => {
+    const handleAgree = async () => {
         if(open) {
             if(tableType === tableTypes.projects) {
                 
-                firestore.delete(`/projects/${id}`)    
-                firestore.delete(`/users_projects/${id}`)   
-                dispatch(toggleSnackbar([true, 'success', 'Project succesfully deleted']));
+                try {
+                    await firestore.delete(`/projects/${id}`)    
+                    await firestore.delete(`/users_projects/${id}`)   
+                    dispatch(toggleSnackbar([true, 'success', 'Project succesfully deleted']));
+                } catch (error) {
+                    dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+                }
+                
+
+                
                 
             } 
             else if(tableType === tableTypes.users_projects) {
-                firestore.update(`/users_projects/${urlId}`, {
-                    collaborators: firestore.FieldValue.arrayRemove(`${id}`)
-                })
-                dispatch(toggleSnackbar([true, 'success', 'User removed from project team.']));
+                try {
+                    await firestore.update(`/users_projects/${urlId}`, {
+                        collaborators: firestore.FieldValue.arrayRemove(`${id}`)
+                    })
+                    dispatch(toggleSnackbar([true, 'success', 'User removed from project team.']));
+                } catch (error) {
+                    dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+                }
 
             } 
             else if(tableType === tableTypes.tickets) {
-                firestore.update(`/tickets/${id}`, {
-                    status: 'resolved'
-                })
-                dispatch(toggleSnackbar([true, 'success', 'Ticket has been archived.']));
+                try {
+                    await firestore.update(`/tickets/${id}`, {
+                        status: 'resolved'
+                    })
+                    dispatch(toggleSnackbar([true, 'success', 'Ticket has been archived.']));
+                } catch (error) {
+                    dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+                }
 
             }
         }   

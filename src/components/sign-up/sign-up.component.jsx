@@ -9,7 +9,7 @@ import { SignUpContainer, SignUpTitle } from './sign-up.styles';
 
 import { toggleSnackbar } from '../../redux/tableSlice';
 import { userTypes, userConversion } from '../../constants'
-
+import './sign-up.scss';
 const SignUp = () => {
   const [userCredentials, setUserCredentials] = useState({
     displayName: '',
@@ -61,6 +61,17 @@ const SignUp = () => {
     setUserCredentials({...userCredentials, [name]: value });
   };
 
+  async function handleGuestLogin1(event) {
+    event.preventDefault();
+    const email = 'admin@guest.com'
+
+    firebase.login({ email: email, password: 'test123'}).catch((error) => {
+        dispatch(toggleSnackbar([true, 'error', error.code + ' - ' + error.message]));
+    })
+};
+
+
+
   return (
     <SignUpContainer>
       <SignUpTitle>I do not have a account</SignUpTitle>
@@ -107,7 +118,18 @@ const SignUp = () => {
 
           SIGN UP
         </Button>
+        
+        <Button  
+        onClick={handleGuestLogin1}
+        variant="contained"
+        color="primary"
+        style={{width:220, height:50, borderRadius:0, backgroundColor:'#4288EF', marginRight:'-15px', float:'right'}}
+        > 
+            Sign In As Guest
+        </Button>
+  
       </form>
+      
     </SignUpContainer>
   );
 }

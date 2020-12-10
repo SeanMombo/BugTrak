@@ -91,7 +91,10 @@ const SignIn = () => {
           <GoogleButton
             onClick={() => { loginWithGoogle() }}
           />
+
+
         </ButtonsBarContainer>
+        
       </form>
     </SignInContainer>
   );
